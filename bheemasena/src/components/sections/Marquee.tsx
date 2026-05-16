@@ -1,5 +1,5 @@
 // Marquee.tsx — Curved infinite carousel
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useMotionValue, animate, type PanInfo } from 'motion/react'
 import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 
@@ -24,82 +24,131 @@ const CARDS: Card[] = [
 ]
 
 const N = CARDS.length
-const CARD_WIDTH = 320
 const CARD_GAP = 16
-const CARD_HEIGHT = 420
-const STEP = CARD_WIDTH + CARD_GAP
+const ASPECT = 3 / 4  // width : height
 
-// 5 copies — gives the user a generous swipe margin in either direction
-// before a re-anchor is needed (≈20 cards each way).
+// 5 copies of the cards array. The middle copy is "home"; the active
+// index is allowed to drift through copies, with a silent re-anchor
+// back to the middle only when active reaches the very outer copies.
 const COPIES = 5
 const VIRTUAL = N * COPIES
-const MIDDLE_START = 2 * N
-const MIDDLE_END = 3 * N - 1
-const INITIAL_ACTIVE = MIDDLE_START + Math.floor(N / 2)
+const SAFE_START = N            // 8
+const SAFE_END = (COPIES - 1) * N - 1  // 31
+const INITIAL_ACTIVE = Math.floor(VIRTUAL / 2)  // 20
 
-// Track offset that puts card `i` under the viewport centre.
-const centeredOffset = (i: number) => STEP * ((VIRTUAL - 1) / 2 - i)
-
-// Physical distance from active, reduced into [-N/2, N/2]. The sign
-// reflects which side of active the card sits on; cards beyond ±N/2
-// wrap to the opposite side but are far off-screen, so the wrap is
-// never seen.
-function signedDistance(i: number, active: number): number {
-  const raw = i - active
-  const mod = ((raw % N) + N) % N
-  return mod > N / 2 ? mod - N : mod
-}
-
-// Cubic ease-out tween — deterministic, no overshoot.
+// Cubic ease-out tween — deterministic, no spring overshoot.
 const TWEEN = {
   type: 'tween' as const,
   duration: 0.45,
   ease: [0.22, 1, 0.36, 1] as const,
 }
 
+// Pick a card width that suits the viewport. Mobile gets a smaller
+// card so multiple are visible on a phone screen.
+function pickCardWidth(): number {
+  if (typeof window === 'undefined') return 320
+  if (window.innerWidth < 480) return 200
+  if (window.innerWidth < 768) return 240
+  return 320
+}
+
+// Physical distance from active, reduced into [-N/2, N/2]. The sign
+// reflects which physical side of active the card sits on; cards
+// beyond ±N/2 wrap to the opposite side, but they're far off-screen
+// at that point so the wrap is never seen.
+function signedDistance(i: number, active: number): number {
+  const raw = i - active
+  const mod = ((raw % N) + N) % N
+  return mod > N / 2 ? mod - N : mod
+}
+
 export function Marquee() {
   const [active, setActive] = useState(INITIAL_ACTIVE)
+  const [cardWidth, setCardWidth] = useState<number>(pickCardWidth)
+
+  const CARD_HEIGHT = useMemo(() => Math.round(cardWidth / ASPECT), [cardWidth])
+  const STEP = cardWidth + CARD_GAP
+
+  const centeredOffset = useCallback(
+    (i: number) => STEP * ((VIRTUAL - 1) / 2 - i),
+    [STEP],
+  )
+
   const x = useMotionValue(centeredOffset(INITIAL_ACTIVE))
 
   // Refs for cross-frame state. Refs avoid stale-closure issues that
   // plague long-lived callbacks like animate().then().
   const animatingRef = useRef(false)
   const isDraggingRef = useRef(false)
+  const dragMovedRef = useRef(false)
   const currentTargetRef = useRef(INITIAL_ACTIVE)
+
+  // Resize listener: re-pick a card width if the viewport crosses a
+  // breakpoint, and re-anchor x so the active card stays centered.
+  useEffect(() => {
+    const onResize = () => {
+      const w = pickCardWidth()
+      setCardWidth(prev => (prev === w ? prev : w))
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  useEffect(() => {
+    // After cardWidth changes, snap x to whatever the new centered
+    // position for the current active is — no animation, just a jump.
+    x.set(centeredOffset(active))
+  }, [cardWidth, active, centeredOffset, x])
 
   // Slide x to the target's centered position. After the tween settles
   // (and only if this is still the latest target, and the user isn't
-  // mid-drag), silently re-anchor into the middle copy if we've drifted.
+  // mid-drag), silently re-anchor into the middle range if active has
+  // drifted to the very edge.
   const slideTo = useCallback((target: number) => {
     animatingRef.current = true
     currentTargetRef.current = target
     const controls = animate(x, centeredOffset(target), TWEEN)
     controls.then(() => {
-      // Stale check: if a newer slideTo has superseded this one, do nothing.
       if (currentTargetRef.current !== target) return
       animatingRef.current = false
-      // Don't fire the silent re-anchor while the user is actively dragging.
       if (isDraggingRef.current) return
-      if (target < MIDDLE_START || target > MIDDLE_END) {
-        const wrapped = MIDDLE_START + ((target % N) + N) % N
-        // Because signedDistance is modular, every card's rotateY/scale
-        // for the new `active` matches its current values exactly — the
-        // swap is genuinely invisible. We just teleport x and update state.
-        x.set(centeredOffset(wrapped))
-        currentTargetRef.current = wrapped
-        setActive(wrapped)
+      if (target < SAFE_START || target > SAFE_END) {
+        // Bring active into the middle copy at the same modular index.
+        const safe = 2 * N + ((target % N) + N) % N
+        x.set(centeredOffset(safe))
+        currentTargetRef.current = safe
+        setActive(safe)
       }
     })
-  }, [x])
+  }, [x, centeredOffset])
 
   const handleDragStart = () => {
     isDraggingRef.current = true
+    dragMovedRef.current = true
   }
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     isDraggingRef.current = false
     const power = info.offset.x + info.velocity.x * 0.25
-    const steps = Math.round(-power / STEP)
+    const ratio = -power / STEP
+
+    // Commit to a card step in the drag direction whenever the drag
+    // is more than ~20% of a card width. Below that it's a tap / wobble,
+    // so just snap back. This eliminates the snap-back-against-the-drag
+    // sensation that produces the "front+back" jolt.
+    let steps: number
+    const absRatio = Math.abs(ratio)
+    if (absRatio < 0.2) {
+      steps = 0
+    } else {
+      steps = Math.sign(ratio) * Math.max(1, Math.round(absRatio))
+    }
+
+    // Clear the dragMoved flag after the click event has had a chance
+    // to fire (and be ignored). The synthetic click follows pointerup
+    // by a few ms.
+    setTimeout(() => { dragMovedRef.current = false }, 50)
+
     if (steps === 0) {
       slideTo(active)
       return
@@ -109,9 +158,11 @@ export function Marquee() {
     slideTo(next)
   }
 
-  // Tap on a non-active card — motion's onTap differentiates tap from
-  // drag, so this works on both mouse and touch.
-  const handleCardTap = (i: number) => {
+  // Mouse click + touch — onClick fires reliably on both. The
+  // dragMovedRef guard suppresses the synthetic click that fires
+  // right after a real drag ends.
+  const handleCardClick = (i: number) => {
+    if (dragMovedRef.current) return
     if (animatingRef.current || isDraggingRef.current) return
     if (i === active) return
     setActive(i)
@@ -122,7 +173,7 @@ export function Marquee() {
 
   return (
     <section style={{
-      padding: 'clamp(64px,8vw,100px) 0',
+      padding: 'clamp(48px,7vw,100px) 0',
       background: 'var(--color-paper)',
       overflow: 'hidden',
     }}>
@@ -164,11 +215,11 @@ export function Marquee() {
             return (
               <motion.div
                 key={i}
-                onTap={() => handleCardTap(i)}
+                onClick={() => handleCardClick(i)}
                 animate={{ rotateY, scale }}
                 transition={TWEEN}
                 style={{
-                  width: CARD_WIDTH,
+                  width: cardWidth,
                   height: CARD_HEIGHT,
                   borderRadius: 4,
                   overflow: 'hidden',
@@ -223,11 +274,14 @@ export function Marquee() {
             key={i}
             onClick={() => {
               if (animatingRef.current || isDraggingRef.current) return
-              // Find the nearest "physically close" instance of this
-              // modular card index so the slide is short.
-              const desired = ((i - (active % N) + N) % N) + active
-              setActive(desired)
-              slideTo(desired)
+              // Pick the nearest (physical) instance of this modular index.
+              const cur = ((active % N) + N) % N
+              const fwd = ((i - cur) + N) % N      // 0..N-1 forward steps
+              const bwd = fwd - N                  // -(N-fwd) backward
+              const delta = Math.abs(fwd) <= Math.abs(bwd) ? fwd : bwd
+              const next = active + delta
+              setActive(next)
+              slideTo(next)
             }}
             aria-label={`Go to ${CARDS[i].label}`}
             style={{
