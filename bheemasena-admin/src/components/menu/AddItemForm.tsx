@@ -1,5 +1,4 @@
-import { useState, useRef } from 'react'
-import { Image as ImageIcon, Link as LinkIcon, Upload } from 'lucide-react'
+import { useState } from 'react'
 import { Spinner } from '../ui/Spinner'
 import { MENU_DATA, MENU_CATEGORY_KEYS } from '../../data/menuData'
 import { api } from '../../lib/api'
@@ -13,24 +12,13 @@ export function AddItemForm({ onClose, onAdded }: { onClose: () => void; onAdded
   const [mode, setMode] = useState<'existing' | 'new'>('existing')
   const [existingKey, setExistingKey] = useState<string>(MENU_CATEGORY_KEYS[0] ?? '')
   const [newCategory, setNewCategory] = useState('')
-  const [headingPrefix, setHeadingPrefix] = useState('Begin with')
-  const [headingItalic, setHeadingItalic] = useState('biryani.')
 
   const [name, setName] = useState('')
   const [desc, setDesc] = useState('')
   const [price, setPrice] = useState('')
   const [original, setOriginal] = useState('')
   const [veg, setVeg] = useState(true)
-  const [imgMode, setImgMode] = useState<'url' | 'upload'>('url')
-  const [img, setImg] = useState('')
   const [busy, setBusy] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
-
-  function pickFile(f: File) {
-    const r = new FileReader()
-    r.onload = () => setImg(String(r.result))
-    r.readAsDataURL(f)
-  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -38,7 +26,6 @@ export function AddItemForm({ onClose, onAdded }: { onClose: () => void; onAdded
 
     let category_key: string
     let category_label: string
-    let category_heading: string | null = null
 
     if (mode === 'existing') {
       const cat = MENU_DATA[existingKey]
@@ -49,16 +36,15 @@ export function AddItemForm({ onClose, onAdded }: { onClose: () => void; onAdded
       if (!key) { toast('Category name required', 'error'); return }
       category_key = key
       category_label = newCategory.trim()
-      category_heading = JSON.stringify({ prefix: headingPrefix, italic: headingItalic })
     }
 
     setBusy(true)
     try {
       await api.addMenuItem({
-        category_key, category_label, category_heading,
+        category_key, category_label, category_heading: null,
         name: name.trim(), desc: desc.trim() || null,
         price: Number(price), original_price: original ? Number(original) : null,
-        veg, img: img || null,
+        veg, img: null,
       }, secret)
       toast('Item added to menu', 'success')
       onAdded()
@@ -94,24 +80,6 @@ export function AddItemForm({ onClose, onAdded }: { onClose: () => void; onAdded
         <div style={{ marginBottom: 14 }}>
           <label className="admin-label">Category name</label>
           <input className="admin-input" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Signature plates" />
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
-            <div>
-              <label className="admin-label">Heading prefix</label>
-              <input className="admin-input" value={headingPrefix} onChange={(e) => setHeadingPrefix(e.target.value)} />
-            </div>
-            <div>
-              <label className="admin-label">Italic word</label>
-              <input className="admin-input" value={headingItalic} onChange={(e) => setHeadingItalic(e.target.value)} />
-            </div>
-          </div>
-          <div style={{
-            marginTop: 12, padding: '12px 14px',
-            background: 'var(--color-cream)', borderRadius: 4,
-            fontSize: 18, color: 'var(--color-ink)',
-          }}>
-            {headingPrefix} <em style={{ color: 'var(--color-accent)' }}>{headingItalic}</em>
-          </div>
         </div>
       )}
 
@@ -167,35 +135,6 @@ export function AddItemForm({ onClose, onAdded }: { onClose: () => void; onAdded
             Non-veg
           </button>
         </div>
-      </div>
-
-      <div style={{ marginBottom: 14 }}>
-        <label className="admin-label">Image (optional)</label>
-        <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-          <SegBtn active={imgMode === 'url'}    onClick={() => setImgMode('url')}><LinkIcon size={12} /> URL</SegBtn>
-          <SegBtn active={imgMode === 'upload'} onClick={() => setImgMode('upload')}><Upload size={12} /> Upload</SegBtn>
-        </div>
-        {imgMode === 'url' ? (
-          <input className="admin-input" placeholder="https://…" value={img.startsWith('data:') ? '' : img} onChange={(e) => setImg(e.target.value)} />
-        ) : (
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            onChange={(e) => { const f = e.target.files?.[0]; if (f) pickFile(f) }}
-            style={{ fontSize: 12 }}
-          />
-        )}
-        {img && (
-          <div style={{ marginTop: 8 }}>
-            <img src={img} alt="" style={{ height: 100, borderRadius: 4, border: '1px solid var(--color-admin-border)' }} />
-          </div>
-        )}
-        {!img && (
-          <div style={{ marginTop: 6, color: 'var(--color-muted)', fontSize: 11, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <ImageIcon size={11} /> No image set
-          </div>
-        )}
       </div>
 
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
