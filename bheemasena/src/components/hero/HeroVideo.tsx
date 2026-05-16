@@ -101,6 +101,7 @@ export function HeroVideo() {
           position: 'relative', zIndex: 10,
           height: '100%',
           padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px) clamp(48px,6vw,80px)',
+          paddingTop: 'clamp(100px, 14vw, 160px)',
           display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
           maxWidth: 1280, margin: '0 auto',
         }}

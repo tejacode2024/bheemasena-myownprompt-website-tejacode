@@ -1,7 +1,16 @@
 import { useState } from 'react'
 import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 
-const TILES = Array.from({ length: 8 }, (_, i) => i)
+const MARQUEE_IMAGES = [
+  '/images/marquee/dish-1.jpeg',
+  '/images/marquee/dish-2.jpeg',
+  '/images/marquee/dish-3.jpeg',
+  '/images/marquee/dish-4.jpeg',
+  '/images/marquee/dish-5.jpeg',
+  '/images/marquee/dish-6.jpeg',
+  '/images/marquee/dish-7.jpeg',
+  '/images/marquee/dish-8.jpeg',
+]
 
 export function Marquee() {
   const [paused, setPaused] = useState(false)
@@ -22,7 +31,7 @@ export function Marquee() {
         style={{ position: 'relative' }}
       >
         <div className={`marquee-track ${paused ? 'paused' : ''}`}>
-          {[...TILES, ...TILES].map((_, i) => (
+          {[...MARQUEE_IMAGES, ...MARQUEE_IMAGES].map((src, i) => (
             <div
               key={i}
               style={{
@@ -30,7 +39,7 @@ export function Marquee() {
                 width: 'clamp(280px, 32vw, 460px)',
               }}
             >
-              <MediaPlaceholder aspect="4/3" label="dish" />
+              <MediaPlaceholder aspect="4/3" label="dish" src={src} />
             </div>
           ))}
         </div>

@@ -22,13 +22,16 @@ export function Gallery() {
         }}
         className="gallery-grid"
       >
-        {TILE_PATTERN.map((filled, idx) =>
-          filled ? (
-            <MediaPlaceholder key={idx} aspect="1/1" label="image" />
-          ) : (
-            <div key={idx} style={{ aspectRatio: '1/1', background: 'var(--color-cream)' }} />
-          ),
-        )}
+        {(() => {
+          let imgIdx = 0
+          return TILE_PATTERN.map((filled, idx) =>
+            filled ? (
+              <MediaPlaceholder key={idx} aspect="1/1" label="image" src={`/images/gallery/gallery-${++imgIdx}.jpg`} />
+            ) : (
+              <div key={idx} style={{ aspectRatio: '1/1', background: 'var(--color-cream)' }} />
+            )
+          )
+        })()}
       </div>
 
       <div style={{ marginTop: 32, textAlign: 'center' }}>

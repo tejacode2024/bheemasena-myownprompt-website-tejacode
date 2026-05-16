@@ -4,6 +4,7 @@ export type BlogPost = {
   date: string
   excerpt: string
   body: string
+  image?: string
 }
 
 export const BLOG: BlogPost[] = [
@@ -11,6 +12,7 @@ export const BLOG: BlogPost[] = [
     slug: 'the-warriors-feast',
     title: "The Warrior's Feast: How Bheemasena Eats",
     date: '2026-04-18',
+    image: '/images/blog/blog-1.jpeg',
     excerpt: 'A meal at Bheemasena is built like a campaign — pace, rhythm, and a generous hand with the spice tin. Here is how to eat through one without finishing too soon.',
     body: `Bheema, the great warrior of the Mahabharata, was famous for many things — his mace, his temper, and an appetite that fed legends. We named the kitchen after him for the third of those reasons. A meal here should be a campaign, not a sprint.
 
@@ -41,6 +43,7 @@ We don't serve a quick meal. We serve a meal you can pace through, talk through,
     slug: 'spices-of-the-mahabharata',
     title: 'Spices of the Mahabharata: A Pantry Tour',
     date: '2026-03-29',
+    image: '/images/blog/blog-2.jpeg',
     excerpt: 'Mustard, asafoetida, fenugreek, and a few quieter friends — the shelf that shapes the kitchen, told through the dishes you order most.',
     body: `If you stand in our spice room for ten minutes you will smell about thirty things. Most of them are not exotic. None of them are accidental.
 
@@ -70,6 +73,7 @@ It is more work. It is the reason a single bite of our **Rogan Josh** smells lik
     title: 'Behind the Charcoal Grill',
     date: '2026-03-08',
     excerpt: 'The tandoor is not a magic oven. It is a 480°C ceramic cylinder, a coal bed, and a chef who has spent fifteen years learning the difference between hot and ready.',
+    image: '/images/blog/blog-3.jpeg',
     body: `A tandoor looks like an oven. It is not. Ours is closer to a fire — a clay cylinder lined with sand and a charcoal bed at the bottom that we light every afternoon at three o'clock. By six o'clock the walls are radiating 480°C of dry, even heat. That is when the first naan goes in.
 
 ## Why charcoal
@@ -98,6 +102,7 @@ You almost certainly can't reproduce a tandoor at home, and that's fine. But you
     title: 'Meet Our Millers',
     date: '2026-02-22',
     excerpt: 'The wheat in your kulcha didn\'t come from a supermarket. Here are the three farms and the one small mill we buy from, and why we drive three hours to pick up the bags.',
+    image: '/images/blog/blog-4.jpeg',
     body: `We could buy a sack of flour for a quarter of what we pay. The difference would be invisible to most customers, including the careful ones. We still don't.
 
 ## The mill
@@ -132,6 +137,7 @@ Source our own variety — a long project, probably three years out. The dream i
     title: 'A Seasonal Thali for Spring',
     date: '2026-02-04',
     excerpt: 'What we serve when the markets shift — peas, green garlic, raw mango, and a millet roti that disappears by April.',
+    image: '/images/blog/blog-5.jpg',
     body: `Every quarter we set a thali — a composed, fixed plate that gives the kitchen a chance to cook with the markets instead of the calendar. The spring plate goes on the board next week.
 
 ## What's on it
@@ -163,6 +169,7 @@ We don't always like the constraint. It is a *good* constraint.`,
     title: 'The Art of the Biryani',
     date: '2026-01-15',
     excerpt: 'Three hours of marinade, six layers of rice, sealed under dough, finished over low coal. Why our Hyderabadi biryani takes the time it does — and why shortcuts taste like shortcuts.',
+    image: '/images/blog/blog-6.jpeg',
     body: `Of all the dishes on our menu, biryani is the one we most often have to defend. A guest will ask, reasonably, why the kitchen takes thirty minutes longer than the dish next to it. The answer is that we are not assembling a biryani — we are *cooking* one.
 
 ## The marinade

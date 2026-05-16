@@ -7,6 +7,15 @@ type Props = {
   className?: string
   rounded?: number
   src?: string
+  /**
+   * Optional video URL. When set, the video is tried first; if it errors
+   * (file missing, wrong codec, etc.) the component falls back to the
+   * image at `src`. If `src` also errors, the cream placeholder shows.
+   *
+   * This is the recommended way to make any placeholder slot
+   * image-or-video flexible without changing the call site again.
+   */
+  videoSrc?: string
   type?: 'auto' | 'image' | 'video'
   poster?: string
   alt?: string
@@ -56,21 +65,36 @@ export function MediaPlaceholder({
   className,
   rounded = 4,
   src,
+  videoSrc,
   type = 'auto',
   poster,
   alt,
 }: Props) {
   const reduced = usePrefersReducedMotion()
   const [failed, setFailed] = useState(false)
-  const kind = resolveKind(src, type)
+  const [videoFailed, setVideoFailed] = useState(false)
+
+  // If a videoSrc is provided and hasn't yet errored, prefer it.
+  const effectiveSrc = videoSrc && !videoFailed ? videoSrc : src
+  const effectiveType: Props['type'] =
+    videoSrc && !videoFailed ? 'video' : type
+  const kind = resolveKind(effectiveSrc, effectiveType)
 
   if (failed || kind === 'none') {
     return <PlaceholderBox aspect={aspect} label={label} className={className} rounded={rounded} />
   }
 
+  // When a video errors, attempt to fall back to the image at `src` if any —
+  // otherwise drop to the cream placeholder box.
+  const onVideoError = () => {
+    if (src) setVideoFailed(true)
+    else setFailed(true)
+  }
+
   if (kind === 'video') {
     if (reduced) {
-      if (!poster) {
+      const stillSrc = poster ?? src
+      if (!stillSrc) {
         return <PlaceholderBox aspect={aspect} label={label} className={className} rounded={rounded} />
       }
       return (
@@ -83,7 +107,7 @@ export function MediaPlaceholder({
           }}
         >
           <img
-            src={poster}
+            src={stillSrc}
             alt={alt ?? ''}
             loading="lazy"
             decoding="async"
@@ -103,15 +127,15 @@ export function MediaPlaceholder({
         }}
       >
         <video
-          src={src}
-          poster={poster}
+          src={effectiveSrc}
+          poster={poster ?? src}
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
           aria-hidden="true"
-          onError={() => setFailed(true)}
+          onError={onVideoError}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
       </div>
@@ -128,7 +152,7 @@ export function MediaPlaceholder({
       }}
     >
       <img
-        src={src}
+        src={effectiveSrc}
         alt={alt ?? ''}
         loading="lazy"
         decoding="async"

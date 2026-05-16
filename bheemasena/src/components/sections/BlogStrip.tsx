@@ -39,7 +39,7 @@ export function BlogStrip() {
       >
         {posts.map((p) => (
           <Link key={p.slug} to={`/blog/${p.slug}`} style={{ display: 'block' }}>
-            <MediaPlaceholder aspect="16/9" />
+            <MediaPlaceholder aspect="16/9" src={p.image} />
             <div style={{
               marginTop: 20,
               fontSize: 10, letterSpacing: '0.25em',

@@ -153,14 +153,14 @@ export function Nav() {
             )}
           </button>
 
-          <div className="hidden md:block" style={{ marginLeft: 4 }}>
+          <div style={{ marginLeft: 4 }}>
             <ProfileMenu />
           </div>
 
           <button
             type="button"
             onClick={openReserve}
-            className="pill-btn pill-primary hidden md:inline-flex"
+            className="pill-btn pill-primary"
             style={{ height: 40, marginLeft: 6, marginRight: 6 }}
           >
             RESERVE →

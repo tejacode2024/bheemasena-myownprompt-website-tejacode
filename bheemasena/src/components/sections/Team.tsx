@@ -89,7 +89,7 @@ export function Team() {
             style={{ padding: 24, display: 'flex', flexDirection: 'column' }}
           >
             <div style={{ marginBottom: 20 }}>
-              <MediaPlaceholder aspect="4/5" label="portrait" />
+              <MediaPlaceholder aspect="4/5" label="portrait" src={m.image} />
             </div>
             <div style={{
               fontSize: 9, letterSpacing: '0.30em',

@@ -61,7 +61,7 @@ export function GiftCard() {
         className="gift-grid"
       >
         <div style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden' }}>
-          <MediaPlaceholder aspect="4/3" label="dining hall" />
+          <MediaPlaceholder aspect="4/3" label="dining hall" src="/images/giftcard/dining-hall.jpg" />
           <div
             ref={rotateRef}
             aria-hidden="true"
