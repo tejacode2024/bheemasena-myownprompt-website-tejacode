@@ -22,11 +22,17 @@ export default async function handler(req, res) {
   }
   if (!guard(req, res)) return
 
-  const supa = db()
-  const { data: orders, error } = await supa
-    .from('orders').select('*').eq('archived', false)
-    .order('created_at', { ascending: true })
-  if (error) return res.status(500).json({ error: error.message })
+  const sql = db()
+  let orders
+  try {
+    orders = await sql`
+      SELECT * FROM orders
+      WHERE archived = false
+      ORDER BY created_at ASC
+    `
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
 
   const wb = new ExcelJS.Workbook()
   wb.creator = 'Bheemasena Admin'

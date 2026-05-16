@@ -2,7 +2,8 @@
 
 Operations dashboard for the Bheemasena restaurant. Vite + React 19 + TypeScript
 SPA, deployed alongside Vercel Serverless Functions in `/api/`. Data lives in
-Supabase (Postgres).
+Neon (serverless Postgres). Protection is enforced at the API layer via an
+`x-admin-secret` header — there is no RLS.
 
 ## Tabs
 
@@ -32,19 +33,18 @@ Copy `.env.example` to `.env` at the repo root and fill in:
 
 | variable | scope | purpose |
 | --- | --- | --- |
-| `SUPABASE_URL` | server | Supabase project URL |
-| `SUPABASE_SERVICE_KEY` | server | `service_role` key (keep secret) |
+| `DATABASE_URL` | server | Neon Postgres connection string (use the **pooled** connection) |
 | `ADMIN_SECRET` | server | required `x-admin-secret` for protected routes |
 | `VITE_API_URL` | client | leave blank for same-origin deploys |
 | `VITE_ADMIN_SECRET` | client | what the admin login compares against |
 
-## Supabase setup
+## Neon setup
 
-1. Create a fresh Supabase project.
-2. Open the SQL Editor and paste the contents of `supabase-schema.sql` from the
+1. Create a Neon project at [neon.tech](https://neon.tech).
+2. Open the **SQL Editor** and paste the contents of `db-schema.sql` from the
    repo root. Run it. The schema is idempotent.
-3. Project settings → API → copy the `URL` and `service_role` key into your
-   `.env`.
+3. **Connection Details** → copy the **Pooled** connection string into
+   `DATABASE_URL` in your `.env`.
 4. Reset the token sequence at any time with:
 
    ```sql

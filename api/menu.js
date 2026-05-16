@@ -1,38 +1,46 @@
 import { db, guard, readJSON } from './_db.js'
 
 export default async function handler(req, res) {
-  const supa = db()
+  const sql = db()
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`)
   const id = url.searchParams.get('id')
 
   if (req.method === 'GET') {
-    const { data, error } = await supa
-      .from('menu_items').select('*').order('created_at', { ascending: true })
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json(data)
+    try {
+      const rows = await sql`SELECT * FROM menu_items ORDER BY created_at ASC`
+      return res.status(200).json(rows)
+    } catch (e) {
+      return res.status(500).json({ error: e.message })
+    }
   }
 
   if (req.method === 'POST') {
     if (!guard(req, res)) return
     let body
     try { body = await readJSON(req) } catch { return res.status(400).json({ error: 'Bad JSON' }) }
-    const insert = {
-      category_key:     body.category_key,
-      category_label:   body.category_label,
-      category_heading: body.category_heading ?? null,
-      name:             body.name,
-      desc:             body.desc ?? null,
-      price:            Number(body.price),
-      original_price:   body.original_price == null ? null : Number(body.original_price),
-      veg:              !!body.veg,
-      img:              body.img ?? null,
-    }
-    if (!insert.category_key || !insert.category_label || !insert.name || !insert.price) {
+    const {
+      category_key, category_label, category_heading,
+      name, desc, price, original_price, veg, img,
+    } = body
+    if (!category_key || !category_label || !name || !price) {
       return res.status(400).json({ error: 'Missing required fields' })
     }
-    const { data, error } = await supa.from('menu_items').insert(insert).select().single()
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(201).json(data)
+    try {
+      const [row] = await sql`
+        INSERT INTO menu_items
+          (category_key, category_label, category_heading, name, "desc",
+           price, original_price, veg, img)
+        VALUES
+          (${category_key}, ${category_label}, ${category_heading ?? null},
+           ${name}, ${desc ?? null}, ${Number(price)},
+           ${original_price == null ? null : Number(original_price)},
+           ${!!veg}, ${img ?? null})
+        RETURNING *
+      `
+      return res.status(201).json(row)
+    } catch (e) {
+      return res.status(500).json({ error: e.message })
+    }
   }
 
   if (req.method === 'PATCH') {
@@ -40,24 +48,40 @@ export default async function handler(req, res) {
     if (!id) return res.status(400).json({ error: 'Missing id' })
     let body
     try { body = await readJSON(req) } catch { return res.status(400).json({ error: 'Bad JSON' }) }
-    const allowed = ['price', 'original_price', 'desc', 'category_heading']
-    const patch = {}
-    for (const k of allowed) if (k in body) patch[k] = body[k]
-    if ('price' in patch && patch.price != null) patch.price = Number(patch.price)
-    if ('original_price' in patch && patch.original_price != null) patch.original_price = Number(patch.original_price)
-    const { data, error } = await supa
-      .from('menu_items').update(patch).eq('id', Number(id))
-      .select().single()
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json(data)
+
+    const priceArg    = 'price' in body          ? Number(body.price)          : null
+    const originalArg = 'original_price' in body
+      ? (body.original_price == null ? null : Number(body.original_price))
+      : null
+    const descArg     = 'desc' in body           ? body.desc                   : null
+    const headingArg  = 'category_heading' in body ? body.category_heading     : null
+
+    try {
+      const [row] = await sql`
+        UPDATE menu_items SET
+          price            = COALESCE(${priceArg}::int, price),
+          original_price   = CASE WHEN ${'original_price' in body} THEN ${originalArg}::int ELSE original_price END,
+          "desc"           = CASE WHEN ${'desc' in body} THEN ${descArg} ELSE "desc" END,
+          category_heading = CASE WHEN ${'category_heading' in body} THEN ${headingArg} ELSE category_heading END
+        WHERE id = ${Number(id)}
+        RETURNING *
+      `
+      if (!row) return res.status(404).json({ error: 'Item not found' })
+      return res.status(200).json(row)
+    } catch (e) {
+      return res.status(500).json({ error: e.message })
+    }
   }
 
   if (req.method === 'DELETE') {
     if (!guard(req, res)) return
     if (!id) return res.status(400).json({ error: 'Missing id' })
-    const { error } = await supa.from('menu_items').delete().eq('id', Number(id))
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json({ ok: true })
+    try {
+      await sql`DELETE FROM menu_items WHERE id = ${Number(id)}`
+      return res.status(200).json({ ok: true })
+    } catch (e) {
+      return res.status(500).json({ error: e.message })
+    }
   }
 
   res.setHeader('Allow', 'GET, POST, PATCH, DELETE')

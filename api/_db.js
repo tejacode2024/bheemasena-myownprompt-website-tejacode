@@ -1,16 +1,13 @@
-import { createClient } from '@supabase/supabase-js'
+import { neon } from '@neondatabase/serverless'
 
-let _client = null
+let _sql = null
 
 export function db() {
-  if (_client) return _client
-  const url = process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_KEY
-  if (!url || !key) throw new Error('Missing SUPABASE_URL / SUPABASE_SERVICE_KEY')
-  _client = createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
-  return _client
+  if (_sql) return _sql
+  const url = process.env.DATABASE_URL
+  if (!url) throw new Error('Missing DATABASE_URL')
+  _sql = neon(url)
+  return _sql
 }
 
 export function guard(req, res) {
