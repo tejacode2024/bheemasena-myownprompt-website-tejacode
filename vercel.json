@@ -1,11 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd bheemasena-admin && npm install && npm run build",
-  "outputDirectory": "bheemasena-admin/dist",
+  "buildCommand": "cd bheemasena && npm install && npm run build && cd ../bheemasena-admin && npm install && npm run build && cd .. && rm -rf bheemasena/dist/admin && cp -r bheemasena-admin/dist bheemasena/dist/admin",
+  "outputDirectory": "bheemasena/dist",
   "installCommand": "npm install",
   "routes": [
     { "src": "^/api/(.*)", "dest": "/api/$1" },
     { "handle": "filesystem" },
+    { "src": "^/admin(?:/.*)?$", "dest": "/admin/index.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "crons": [
