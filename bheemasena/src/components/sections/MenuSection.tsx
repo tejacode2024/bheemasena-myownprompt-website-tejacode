@@ -20,14 +20,14 @@ const CATEGORIES = [
 type Category = (typeof CATEGORIES)[number]
 
 const HERO_BY_CATEGORY: Record<Category, string> = {
-  'Veg Starters':     '/images/menu/category-veg-starters.jpg',
+  'Veg Starters':     '/images/menu/category-veg-starters.jpeg',
   'Non-Veg Starters': '/images/menu/category-non-veg-starters.jpg',
-  'Veg Biryani':      '/images/menu/category-veg-biryani.jpg',
-  'Non-Veg Biryani':  '/images/menu/category-non-veg-biryani.jpg',
-  'Mini Biryani':     '/images/menu/category-mini-biryani.jpg',
+  'Veg Biryani':      '/images/menu/category-veg-biryani.jpeg',
+  'Non-Veg Biryani':  '/images/menu/category-non-veg-biryani.jpeg',
+  'Mini Biryani':     '/images/menu/category-mini-biryani.jpeg',
   'Breads':           '/images/menu/category-breads.jpg',
-  'Veg Curries':      '/images/menu/category-veg-curries.jpg',
-  'Non-Veg Curries':  '/images/menu/category-non-veg-curries.jpg',
+  'Veg Curries':      '/images/menu/category-veg-curries.jpeg',
+  'Non-Veg Curries':  '/images/menu/category-non-veg-curries.jpeg',
 }
 
 type Props = { variant?: 'preview' | 'full' }
