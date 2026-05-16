@@ -69,7 +69,7 @@ export function HeroVideo() {
         ) : (
           <motion.img
             key="hero-image"
-            src="/images/bheemasena-intro-picture.jpg"
+            src="/images/bheemasena-intro-picture.jpeg"
             alt="Bheemasena dining hall"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
