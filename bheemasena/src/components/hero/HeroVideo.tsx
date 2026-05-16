@@ -57,7 +57,7 @@ export function HeroVideo() {
             muted
             playsInline
             preload="auto"
-            poster="/images/bheemasena-intro-picture.jpg"
+            poster="/images/bheemasena-intro-picture.jpeg"
             src="/videos/bheemasena-intro-video.mp4"
             aria-hidden="true"
             style={{
