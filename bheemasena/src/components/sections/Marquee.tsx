@@ -44,12 +44,9 @@ const TWEEN = {
   ease: [0.22, 1, 0.36, 1] as const,
 }
 
-// Pick a card width that suits the viewport. Mobile gets a smaller
-// card so multiple are visible on a phone screen.
+// Single card width across every viewport — restored to the original
+// 320 so mobile cards look as prominent as the desktop ones.
 function pickCardWidth(): number {
-  if (typeof window === 'undefined') return 320
-  if (window.innerWidth < 480) return 200
-  if (window.innerWidth < 768) return 240
   return 320
 }
 
