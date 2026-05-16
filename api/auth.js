@@ -1,15 +1,14 @@
 import { createHash } from 'node:crypto'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import { db, readJSON } from './_db.js'
 
-let _resend = null
-function getResend() {
-  if (_resend) return _resend
-  const key = process.env.RESEND_API_KEY
-  if (!key) throw new Error('Email service not configured')
-  _resend = new Resend(key)
-  return _resend
-}
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+})
 
 const SALT = 'bheemasena_salt'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -30,21 +29,6 @@ function emailHtml(otp) {
   <p style="font-size:48px;font-weight:400;color:#8B6B3D;letter-spacing:0.15em;margin:16px 0">${otp}</p>
   <p style="font-size:12px;color:#6B655C">Valid for 10 minutes. Do not share this with anyone.</p>
 </div>`
-}
-
-async function sendResendEmail(to, otp) {
-  const from = process.env.RESEND_FROM_EMAIL
-  if (!from) throw new Error('Email service not configured')
-  const resend = getResend()
-  const { error } = await resend.emails.send({
-    from,
-    to,
-    subject: 'Your Bheemasena OTP',
-    html: emailHtml(otp),
-  })
-  if (error) {
-    throw new Error(error.message || 'Email send failed')
-  }
 }
 
 export default async function handler(req, res) {
@@ -92,7 +76,31 @@ export default async function handler(req, res) {
               expires_at = EXCLUDED.expires_at,
               created_at = NOW()
       `
-      await sendResendEmail(email, otp)
+      await transporter.sendMail({
+        from: `"Bheemasena 🏛" <${process.env.GMAIL_USER}>`,
+        to: email,
+        subject: 'Your Bheemasena OTP',
+        html: `
+          <div style="font-family:Georgia,serif;
+            max-width:480px;margin:0 auto;padding:32px;
+            background:#FBF8F3;border:1px solid
+            rgba(14,14,12,0.08)">
+            <h2 style="font-size:24px;color:#0E0E0C;
+              margin:0 0 8px">Bheemasena</h2>
+            <p style="font-size:12px;color:#6B655C;
+              font-style:italic;margin:0 0 32px">
+              Royal Feast</p>
+            <p style="font-size:14px;color:#0E0E0C">
+              Your one-time password is:</p>
+            <p style="font-size:48px;font-weight:400;
+              color:#8B6B3D;letter-spacing:0.15em;
+              margin:16px 0">${otp}</p>
+            <p style="font-size:12px;color:#6B655C">
+              Valid for 10 minutes. Do not share
+              this with anyone.</p>
+          </div>
+        `,
+      })
       return res.status(200).json({ ok: true })
     }
 
