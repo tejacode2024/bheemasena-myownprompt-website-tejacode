@@ -10,7 +10,15 @@
       "Bash(cp \"../login-page-video.mov\" \"public/videos/login-page-video.mp4\")",
       "Bash(npm run *)",
       "Bash(node *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git ls-tree *)",
+      "Bash(git rm *)",
+      "Bash(rm -rf bheemasena-admin/.git)",
+      "Bash(rm -rf bheemasena-myownprompt-website-tejacode.git)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npm uninstall *)"
     ]
   }
 }
