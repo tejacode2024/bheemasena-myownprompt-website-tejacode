@@ -1,19 +1,53 @@
-import { useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Link } from 'react-router-dom'
-import { MENU, type MenuCategory } from '../../data/menu'
+import { MENU } from '../../data/menu'
 import { MenuTabs } from '../menu/MenuTabs'
-import { MenuCard } from '../menu/MenuCard'
+import { MenuCategoryBlock, categoryAnchor } from '../menu/MenuCategoryBlock'
 import { openZomato } from '../../lib/zomato'
+
+const CATEGORIES = [
+  'Veg Starters',
+  'Non-Veg Starters',
+  'Veg Biryani',
+  'Non-Veg Biryani',
+  'Mini Biryani',
+  'Breads',
+  'Veg Curries',
+  'Non-Veg Curries',
+] as const
+
+type Category = (typeof CATEGORIES)[number]
+
+const HERO_BY_CATEGORY: Record<Category, string> = {
+  'Veg Starters':     '/images/menu/category-veg-starters.jpg',
+  'Non-Veg Starters': '/images/menu/category-non-veg-starters.jpg',
+  'Veg Biryani':      '/images/menu/category-veg-biryani.jpg',
+  'Non-Veg Biryani':  '/images/menu/category-non-veg-biryani.jpg',
+  'Mini Biryani':     '/images/menu/category-mini-biryani.jpg',
+  'Breads':           '/images/menu/category-breads.jpg',
+  'Veg Curries':      '/images/menu/category-veg-curries.jpg',
+  'Non-Veg Curries':  '/images/menu/category-non-veg-curries.jpg',
+}
 
 type Props = { variant?: 'preview' | 'full' }
 
 export function MenuSection({ variant = 'preview' }: Props) {
-  const [active, setActive] = useState<MenuCategory>('Starters')
+  const [active, setActive] = useState<Category>(CATEGORIES[0])
 
-  const items = useMemo(() => {
-    const all = MENU.filter((m) => m.category === active)
-    return variant === 'preview' ? all.slice(0, 4) : all
+  const itemsByCategory = useMemo(() => {
+    const map: Record<Category, ReturnType<typeof MENU.filter>> = {} as Record<Category, ReturnType<typeof MENU.filter>>
+    for (const cat of CATEGORIES) {
+      map[cat] = MENU.filter((m) => (m.category as string) === cat)
+    }
+    return map
+  }, [])
+
+  // Variant='full' tab clicks scroll-snap to that category's block.
+  useEffect(() => {
+    if (variant !== 'full') return
+    const el = document.getElementById(categoryAnchor(active))
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [active, variant])
 
   return (
@@ -22,9 +56,10 @@ export function MenuSection({ variant = 'preview' }: Props) {
       aria-labelledby="menu-heading"
       style={{
         padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px)',
+        maxWidth: 1280, margin: '0 auto',
       }}
     >
-      <div style={{ textAlign: 'center', marginBottom: 48 }}>
+      <div style={{ textAlign: 'center', marginBottom: 64 }}>
         <motion.span
           className="eyebrow"
           initial={{ opacity: 0, y: 12 }}
@@ -55,9 +90,13 @@ export function MenuSection({ variant = 'preview' }: Props) {
         </motion.h2>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <MenuTabs active={active} onChange={setActive} />
+      <MenuTabs
+        categories={CATEGORIES as readonly string[]}
+        active={active}
+        onChange={(c) => setActive(c as Category)}
+      />
 
+      {variant === 'preview' ? (
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -65,42 +104,53 @@ export function MenuSection({ variant = 'preview' }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, minmax(0,1fr))',
-              gap: '24px 40px',
-            }}
-            className="menu-grid"
           >
-            {items.map((item) => (
-              <MenuCard key={item.id} item={item} />
-            ))}
+            <MenuCategoryBlock
+              category={active}
+              items={itemsByCategory[active].slice(0, 4)}
+              side="left"
+              heroSrc={HERO_BY_CATEGORY[active]}
+            />
           </motion.div>
         </AnimatePresence>
+      ) : (
+        <div>
+          {CATEGORIES.map((cat, idx) => (
+            <Fragment key={cat}>
+              <MenuCategoryBlock
+                category={cat}
+                items={itemsByCategory[cat]}
+                side={idx % 2 === 0 ? 'left' : 'right'}
+                heroSrc={HERO_BY_CATEGORY[cat]}
+              />
+              {idx < CATEGORIES.length - 1 && (
+                <div className="section-divider">
+                  <span className="line" />
+                  <span className="dot" />
+                  <span className="line" />
+                </div>
+              )}
+            </Fragment>
+          ))}
+        </div>
+      )}
 
-        {variant === 'preview' && (
-          <div
-            style={{
-              marginTop: 48,
-              display: 'flex',
-              gap: 12,
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-            }}
-          >
-            <Link to="/menu" className="pill-btn pill-secondary">SEE ALL MENU →</Link>
-            <button type="button" className="pill-btn pill-ghost" onClick={openZomato}>
-              ORDER ON ZOMATO ↗
-            </button>
-          </div>
-        )}
-      </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .menu-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
-        }
-      `}</style>
+      {variant === 'preview' && (
+        <div
+          style={{
+            marginTop: 48,
+            display: 'flex',
+            gap: 12,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Link to="/menu" className="pill-btn pill-secondary">SEE ALL MENU →</Link>
+          <button type="button" className="pill-btn pill-ghost" onClick={openZomato}>
+            ORDER ON ZOMATO ↗
+          </button>
+        </div>
+      )}
     </section>
   )
 }

@@ -4,14 +4,10 @@ import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
 import { useUIStore } from '../../state/uiStore'
 import { CartStepCart } from './CartStepCart'
-import { CartStepAddress } from './CartStepAddress'
-import { CartStepPayment } from './CartStepPayment'
 import { CartStepConfirmation } from './CartStepConfirmation'
 
 const TITLES: Record<string, string> = {
   cart: 'Your Cart',
-  address: 'Delivery Address',
-  payment: 'Payment',
   confirmation: 'Order Placed',
 }
 
@@ -66,7 +62,7 @@ export function CartDrawer() {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-label={TITLES[step]}
+            aria-label={TITLES[step] ?? 'Cart'}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -92,7 +88,7 @@ export function CartDrawer() {
                 margin: 0, fontSize: 18, fontWeight: 400,
                 color: 'var(--color-ink)',
               }}>
-                {TITLES[step]}
+                {TITLES[step] ?? 'Cart'}
               </h2>
               <button
                 type="button"
@@ -118,10 +114,7 @@ export function CartDrawer() {
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   style={{ height: '100%' }}
                 >
-                  {step === 'cart'         && <CartStepCart />}
-                  {step === 'address'      && <CartStepAddress />}
-                  {step === 'payment'      && <CartStepPayment />}
-                  {step === 'confirmation' && <CartStepConfirmation />}
+                  {step === 'confirmation' ? <CartStepConfirmation /> : <CartStepCart />}
                 </motion.div>
               </AnimatePresence>
             </div>

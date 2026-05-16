@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 
 const TILES = Array.from({ length: 8 }, (_, i) => i)
 
@@ -30,7 +30,7 @@ export function Marquee() {
                 width: 'clamp(280px, 32vw, 460px)',
               }}
             >
-              <ImagePlaceholder aspect="4/3" label="dish" />
+              <MediaPlaceholder aspect="4/3" label="dish" />
             </div>
           ))}
         </div>

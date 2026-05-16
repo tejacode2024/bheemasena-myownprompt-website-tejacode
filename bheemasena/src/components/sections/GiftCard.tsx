@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap, ScrollTrigger } from '../../lib/gsap'
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 import { usePrefersReducedMotion } from '../../lib/format'
 
 export function GiftCard() {
@@ -61,7 +61,7 @@ export function GiftCard() {
         className="gift-grid"
       >
         <div style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden' }}>
-          <ImagePlaceholder aspect="4/3" label="dining hall" />
+          <MediaPlaceholder aspect="4/3" label="dining hall" />
           <div
             ref={rotateRef}
             aria-hidden="true"

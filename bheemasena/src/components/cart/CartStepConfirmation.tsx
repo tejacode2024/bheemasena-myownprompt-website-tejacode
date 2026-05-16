@@ -1,12 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle2 } from 'lucide-react'
 import { useUIStore } from '../../state/uiStore'
+import { useOrderStore } from '../../state/orderStore'
 
 export function CartStepConfirmation() {
-  const closeCart    = useUIStore((s) => s.closeCart)
-  const setStep      = useUIStore((s) => s.setStep)
-  const lastOrderId  = useUIStore((s) => s.lastOrderId)
-  const navigate     = useNavigate()
+  const closeCart   = useUIStore((s) => s.closeCart)
+  const setStep     = useUIStore((s) => s.setStep)
+  const navigate    = useNavigate()
+
+  // Order is now sourced from the order store (last placed) rather than
+  // a separate uiStore field. The timeline writes the order id back to
+  // uiStore.lastOrderId so the drawer can keep showing it after navigation.
+  const fallbackId = useUIStore((s) => s.lastOrderId)
+  const lastOrder  = useOrderStore((s) => s.lastOrder)
+  const orderId    = lastOrder?.id ?? fallbackId ?? ''
 
   const close = () => {
     closeCart()
@@ -34,7 +41,7 @@ export function CartStepConfirmation() {
         lineHeight: 1.6, textTransform: 'none',
         maxWidth: 320,
       }}>
-        Your order <strong style={{ color: 'var(--color-ink)' }}>{lastOrderId}</strong> has been received.
+        Your order <strong style={{ color: 'var(--color-ink)' }}>{orderId}</strong> has been received.
         <br />Estimated delivery: 45–60 min.
       </p>
 

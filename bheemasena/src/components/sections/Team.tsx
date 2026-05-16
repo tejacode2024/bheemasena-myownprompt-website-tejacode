@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap, ScrollTrigger } from '../../lib/gsap'
 import { TEAM } from '../../data/team'
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 import { usePrefersReducedMotion } from '../../lib/format'
 
 export function Team() {
@@ -89,7 +89,7 @@ export function Team() {
             style={{ padding: 24, display: 'flex', flexDirection: 'column' }}
           >
             <div style={{ marginBottom: 20 }}>
-              <ImagePlaceholder aspect="4/5" label="portrait" />
+              <MediaPlaceholder aspect="4/5" label="portrait" />
             </div>
             <div style={{
               fontSize: 9, letterSpacing: '0.30em',

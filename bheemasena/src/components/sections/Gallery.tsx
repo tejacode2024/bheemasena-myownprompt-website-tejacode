@@ -1,4 +1,4 @@
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 import { useUIStore } from '../../state/uiStore'
 
 const TILE_PATTERN = [true, false, true, true, true, false, true, true]
@@ -24,7 +24,7 @@ export function Gallery() {
       >
         {TILE_PATTERN.map((filled, idx) =>
           filled ? (
-            <ImagePlaceholder key={idx} aspect="1/1" label="image" />
+            <MediaPlaceholder key={idx} aspect="1/1" label="image" />
           ) : (
             <div key={idx} style={{ aspectRatio: '1/1', background: 'var(--color-cream)' }} />
           ),

@@ -1,9 +1,14 @@
 import { create } from 'zustand'
 import type { AddressData } from './orderStore'
 
-export type CartStep = 'cart' | 'address' | 'payment' | 'confirmation'
+export type CartStep = 'cart' | 'confirmation'
 export type ToastTone = 'info' | 'success' | 'error'
 export type Toast = { id: string; message: string; tone: ToastTone }
+
+export type OrderDraft = {
+  address: AddressData
+  payment: 'COD'
+}
 
 type UIState = {
   cartOpen: boolean
@@ -13,6 +18,10 @@ type UIState = {
   lang: 'en' | 'fr'
   addressDraft: AddressData | null
   lastOrderId: string | null
+
+  // Order timeline (full-viewport confirmation overlay)
+  timelineOpen: boolean
+  orderDraft: OrderDraft | null
 
   openCart: () => void
   closeCart: () => void
@@ -24,6 +33,9 @@ type UIState = {
   toggleLang: () => void
   setAddressDraft: (a: AddressData | null) => void
   setLastOrderId: (id: string | null) => void
+
+  openTimeline: (draft: OrderDraft) => void
+  closeTimeline: () => void
 }
 
 export const useUIStore = create<UIState>((set, get) => ({
@@ -34,6 +46,9 @@ export const useUIStore = create<UIState>((set, get) => ({
   lang: 'en',
   addressDraft: null,
   lastOrderId: null,
+
+  timelineOpen: false,
+  orderDraft: null,
 
   openCart: () => set({ cartOpen: true, cartStep: get().cartStep === 'confirmation' ? 'cart' : get().cartStep }),
   closeCart: () => set({ cartOpen: false }),
@@ -52,4 +67,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   toggleLang: () => set({ lang: get().lang === 'en' ? 'fr' : 'en' }),
   setAddressDraft: (a) => set({ addressDraft: a }),
   setLastOrderId: (id) => set({ lastOrderId: id }),
+
+  openTimeline: (draft) => set({ orderDraft: draft, timelineOpen: true, cartOpen: false }),
+  closeTimeline: () => set({ timelineOpen: false }),
 }))

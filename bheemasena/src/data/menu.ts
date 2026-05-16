@@ -1,7 +1,14 @@
 export type MenuTag = 'Spicy' | 'New' | 'Chef' | 'Popular' | 'Vegan'
 
 export type MenuCategory =
-  | 'Starters' | 'Soups' | 'Mains' | 'Breads' | 'Desserts' | 'Drinks'
+  | 'Veg Starters'
+  | 'Non-Veg Starters'
+  | 'Veg Biryani'
+  | 'Non-Veg Biryani'
+  | 'Mini Biryani'
+  | 'Breads'
+  | 'Veg Curries'
+  | 'Non-Veg Curries'
 
 export type MenuItem = {
   id: string
@@ -14,115 +21,106 @@ export type MenuItem = {
 }
 
 export const MENU_CATEGORIES: MenuCategory[] = [
-  'Starters', 'Soups', 'Mains', 'Breads', 'Desserts', 'Drinks',
+  'Veg Starters',
+  'Non-Veg Starters',
+  'Veg Biryani',
+  'Non-Veg Biryani',
+  'Mini Biryani',
+  'Breads',
+  'Veg Curries',
+  'Non-Veg Curries',
 ]
 
 export const MENU: MenuItem[] = [
-  // ───── Starters ─────
-  { id: 'st-01', category: 'Starters', name: "Bheema's Champaran Mutton Bites", price: 480, tag: 'Chef',
-    description: 'Slow-cooked mutton chunks finished on the grill — smoke, mustard oil, and warm Bihari spice.' },
-  { id: 'st-02', category: 'Starters', name: 'Kurukshetra Kebabs', price: 420, tag: 'Spicy',
-    description: 'Twin skewers of minced lamb and chicken, charred over coals with green chilli and pepper.' },
-  { id: 'st-03', category: 'Starters', name: "Drona's Dahi Vada", price: 220, tag: 'Popular',
-    description: 'Pillowy lentil dumplings soaked in sweet yoghurt, tamarind, and roasted cumin.' },
-  { id: 'st-04', category: 'Starters', name: "Arjuna's Avocado Chaat", price: 310, tag: 'New',
-    description: 'Avocado and pomegranate over crisp papdi with date-tamarind drizzle and microgreens.' },
-  { id: 'st-05', category: 'Starters', name: 'Hastinapur Hara Bhara Kebab', price: 280, tag: 'Vegan',
-    description: 'Spinach, peas, and millet patties pan-seared with ginger and green chilli.' },
-  { id: 'st-06', category: 'Starters', name: 'Gada Masala Wings', price: 360, tag: 'Spicy',
-    description: 'Mace-spiced chicken wings glazed with a fiery red-chilli reduction.' },
-  { id: 'st-07', category: 'Starters', name: "Yudhishthira's Yam Chips", price: 240,
-    description: 'Twice-fried yam, dusted with chaat masala and curry-leaf salt.' },
-  { id: 'st-08', category: 'Starters', name: "Bhima's Pulled Paneer Tikka", price: 340,
-    description: 'Hand-pulled paneer marinated in yoghurt and Kashmiri chilli, finished in the tandoor.' },
+  // ───── Veg Starters ─────
+  { id: 'vs-01', category: 'Veg Starters', name: 'Veg Manchuria',     price: 210,
+    description: 'Crisp veg dumplings tossed in a tangy soy-garlic glaze.' },
+  { id: 'vs-02', category: 'Veg Starters', name: 'Chilli Mushroom',   price: 230,
+    description: 'Button mushrooms wok-tossed with bell pepper, onion, and green chilli.' },
+  { id: 'vs-03', category: 'Veg Starters', name: 'Crispy Baby Corn',  price: 230,
+    description: 'Battered baby corn fried golden and finished with curry-leaf salt.' },
+  { id: 'vs-04', category: 'Veg Starters', name: 'Paneer 65',         price: 280,
+    description: 'Cottage cheese cubes marinated South-Indian style, fried hot and spicy.' },
+  { id: 'vs-05', category: 'Veg Starters', name: 'Paneer Majestic',   price: 290,
+    description: 'Crisp paneer tossed with curry leaves, green chilli, and tangy masala.' },
 
-  // ───── Soups ─────
-  { id: 'sp-01', category: 'Soups', name: 'Royal Tomato Shorba', price: 180, tag: 'Popular',
-    description: 'Roasted tomato broth with toasted cumin, ghee tempering, and a swirl of cream.' },
-  { id: 'sp-02', category: 'Soups', name: 'Spiced Lentil Broth', price: 170,
-    description: 'Yellow lentils, asafoetida, and curry leaves — a clear, restorative soup.' },
-  { id: 'sp-03', category: 'Soups', name: 'Coconut & Curry Leaf', price: 200, tag: 'Vegan',
-    description: 'Coconut milk simmered with curry leaves, ginger, and toasted mustard seeds.' },
-  { id: 'sp-04', category: 'Soups', name: "Warrior's Bone Broth", price: 260, tag: 'Chef',
-    description: 'Twelve-hour lamb-bone broth, pepper, and ginger — strength in a cup.' },
-  { id: 'sp-05', category: 'Soups', name: 'Sweet Corn Saagwala', price: 190,
-    description: 'Sweet corn and spinach with a hint of garam masala and cracked pepper.' },
-  { id: 'sp-06', category: 'Soups', name: 'Tamarind & Tomato Rasam', price: 180, tag: 'Spicy',
-    description: 'Bright, peppery, and tangy — South India in a bowl.' },
-  { id: 'sp-07', category: 'Soups', name: 'Pumpkin Coriander', price: 200,
-    description: 'Roasted pumpkin pureed with coriander stems and a touch of palm sugar.' },
-  { id: 'sp-08', category: 'Soups', name: 'Kashmiri Yakhni', price: 240,
-    description: 'Fennel- and cardamom-scented mutton yakhni, finished with saffron threads.' },
+  // ───── Non-Veg Starters ─────
+  { id: 'ns-01', category: 'Non-Veg Starters', name: 'Chilli Chicken',     price: 290,
+    description: 'Boneless chicken stir-fried with capsicum, onion, and dark soy.' },
+  { id: 'ns-02', category: 'Non-Veg Starters', name: 'Chicken Manchuria',  price: 290,
+    description: 'Crispy chicken bites in a sweet-spicy Indo-Chinese gravy.' },
+  { id: 'ns-03', category: 'Non-Veg Starters', name: 'Chicken 65',         price: 290,
+    description: 'Iconic Chettinad-style fried chicken with curry leaves and red chilli.' },
+  { id: 'ns-04', category: 'Non-Veg Starters', name: 'Chicken Majestic',   price: 290,
+    description: 'Telugu-style fried chicken with mint, ginger, and a curd marinade.' },
 
-  // ───── Mains ─────
-  { id: 'mn-01', category: 'Mains', name: "Bheema's Champaran Mutton", price: 620, tag: 'Chef',
-    description: 'Mutton sealed and slow-cooked with mustard oil, garlic, and whole spices in a clay handi.' },
-  { id: 'mn-02', category: 'Mains', name: 'Indraprastha Butter Chicken', price: 480, tag: 'Popular',
-    description: 'Tandoor-charred chicken in a velvety tomato-fenugreek gravy, finished with butter.' },
-  { id: 'mn-03', category: 'Mains', name: "Drona's Dal Makhani", price: 360, tag: 'Popular',
-    description: 'Black urad slow-simmered overnight with cream, butter, and a whisper of smoke.' },
-  { id: 'mn-04', category: 'Mains', name: 'Hastinapur Hyderabadi Biryani', price: 540, tag: 'Spicy',
-    description: 'Long-grain basmati layered with marinated meat, mint, fried onion, and saffron.' },
-  { id: 'mn-05', category: 'Mains', name: 'Royal Rogan Josh', price: 580,
-    description: 'Kashmiri lamb braised in fennel, ginger, and red chilli — fragrant and deep.' },
-  { id: 'mn-06', category: 'Mains', name: 'Coastal Konkan Curry', price: 460,
-    description: 'Prawns simmered in coconut, kokum, and roasted spice — a Konkan classic.' },
-  { id: 'mn-07', category: 'Mains', name: 'Palak Paneer Royale', price: 380, tag: 'Vegan',
-    description: 'Cottage cheese in spinach, mustard greens, and methi — finished with smoked ghee.' },
-  { id: 'mn-08', category: 'Mains', name: 'Mahabharat Mixed Grill', price: 650, tag: 'Chef',
-    description: "A tasting platter from the tandoor — kebab, tikka, malai, paneer, and warrior's chutney." },
+  // ───── Veg Biryani (sufficient for 2 people) ─────
+  { id: 'vb-01', category: 'Veg Biryani', name: 'Special Paneer Biryani',    price: 290,
+    description: 'Paneer biryani layered with mint, fried onion, and saffron. Sufficient for 2 people.' },
+  { id: 'vb-02', category: 'Veg Biryani', name: 'Special Mushroom Biryani',  price: 290,
+    description: 'Mushroom dum biryani fragrant with whole spices. Sufficient for 2 people.' },
+  { id: 'vb-03', category: 'Veg Biryani', name: 'Special Veg Biryani',       price: 260,
+    description: 'Mixed vegetables and basmati slow-cooked on dum. Sufficient for 2 people.' },
+  { id: 'vb-04', category: 'Veg Biryani', name: 'Ulavacharu Biryani',        price: 270,
+    description: 'Andhra horse-gram broth folded through long-grain rice. Sufficient for 2 people.' },
+  { id: 'vb-05', category: 'Veg Biryani', name: 'Kaju Biryani',              price: 290,
+    description: 'Cashew biryani with caramelised onion and warm garam masala. Sufficient for 2 people.' },
+  { id: 'vb-06', category: 'Veg Biryani', name: 'Special Kaju Biryani',      price: 310,
+    description: 'House cashew biryani enriched with ghee and saffron milk. Sufficient for 2 people.' },
+  { id: 'vb-07', category: 'Veg Biryani', name: 'Veg Biryani',               price: 240,
+    description: 'A classic dum biryani of seasonal vegetables. Sufficient for 2 people.' },
+
+  // ───── Non-Veg Biryani (sufficient for 2 people) ─────
+  { id: 'nb-01', category: 'Non-Veg Biryani', name: 'Special Egg Biryani',        price: 280,
+    description: 'Two whole eggs layered into a dum biryani. Sufficient for 2 people.' },
+  { id: 'nb-02', category: 'Non-Veg Biryani', name: 'Chicken Dum Biryani',        price: 270,
+    description: 'Hyderabad-style chicken biryani sealed and cooked on dum. Sufficient for 2 people.' },
+  { id: 'nb-03', category: 'Non-Veg Biryani', name: 'Kundan Biryani',             price: 360,
+    description: 'House signature with marinated chicken, saffron, and ghee. Sufficient for 2 people.' },
+  { id: 'nb-04', category: 'Non-Veg Biryani', name: 'Chicken Fry Biryani',        price: 280,
+    description: 'Twice-cooked chicken folded through basmati. Sufficient for 2 people.' },
+  { id: 'nb-05', category: 'Non-Veg Biryani', name: 'Special Chicken Biryani',    price: 300,
+    description: 'Boneless chicken biryani with mint and fried onion. Sufficient for 2 people.' },
+  { id: 'nb-06', category: 'Non-Veg Biryani', name: 'Joint Biryani',              price: 310,
+    description: 'Bone-in chicken on the joint, slow-cooked over rice. Sufficient for 2 people.' },
+  { id: 'nb-07', category: 'Non-Veg Biryani', name: 'Chicken Mughlai Biryani',    price: 310,
+    description: 'Mughlai biryani perfumed with rose water and cardamom. Sufficient for 2 people.' },
+  { id: 'nb-08', category: 'Non-Veg Biryani', name: 'Chicken Lollipop Biryani',   price: 330,
+    description: 'Spiced lollipop drumsticks layered into a fragrant dum biryani. Sufficient for 2 people.' },
+
+  // ───── Mini Biryani (sufficient for 1 person) ─────
+  { id: 'mb-01', category: 'Mini Biryani', name: 'Mini Dum Biryani',             price: 170,
+    description: 'A single-serve dum biryani. Sufficient for 1 person.' },
+  { id: 'mb-02', category: 'Mini Biryani', name: 'Mini Fry Biryani',             price: 180,
+    description: 'Twice-cooked chicken with rice, half-portion. Sufficient for 1 person.' },
+  { id: 'mb-03', category: 'Mini Biryani', name: 'Mini Special Chicken Biryani', price: 190,
+    description: 'House special chicken biryani in a solo portion. Sufficient for 1 person.' },
+  { id: 'mb-04', category: 'Mini Biryani', name: 'Mini Paneer Biryani',          price: 190,
+    description: 'Paneer biryani in a one-up serve. Sufficient for 1 person.' },
+  { id: 'mb-05', category: 'Mini Biryani', name: 'Mini Mushroom Biryani',        price: 200,
+    description: 'Mushroom dum biryani in a single portion. Sufficient for 1 person.' },
+  { id: 'mb-06', category: 'Mini Biryani', name: 'Mini Mughlai Biryani',         price: 200,
+    description: 'Mughlai biryani perfumed and plated solo. Sufficient for 1 person.' },
+  { id: 'mb-07', category: 'Mini Biryani', name: 'Mini Special Biryani',         price: 200,
+    description: 'Chef\'s pick of the day, mini portion. Sufficient for 1 person.' },
 
   // ───── Breads ─────
-  { id: 'br-01', category: 'Breads', name: 'Gada Garlic Naan', price: 120,
-    description: 'Soft naan brushed with garlic, butter, and fresh coriander.' },
-  { id: 'br-02', category: 'Breads', name: 'Khandav Forest Roti', price: 90,
+  { id: 'br-01', category: 'Breads', name: 'Butter Naan', price: 45,
+    description: 'Soft tandoor naan brushed with cultured butter.' },
+  { id: 'br-02', category: 'Breads', name: 'Roti',        price: 25,
     description: 'Whole-wheat tandoor roti, brushed with ghee.' },
-  { id: 'br-03', category: 'Breads', name: 'Tandoori Laccha Paratha', price: 140,
-    description: 'Layered paratha pulled and crisped in the tandoor.' },
-  { id: 'br-04', category: 'Breads', name: 'Stuffed Kulcha', price: 160,
-    description: 'Spiced potato or paneer filling, toasted on stone with onion-seed crust.' },
-  { id: 'br-05', category: 'Breads', name: 'Missi Roti', price: 110,
-    description: 'Gram flour and wheat with carom seeds and chopped onion — rustic and warming.' },
-  { id: 'br-06', category: 'Breads', name: 'Butter Naan', price: 110,
-    description: 'A classic — soft, blistered, brushed with cultured butter.' },
-  { id: 'br-07', category: 'Breads', name: 'Roomali Roti', price: 100,
-    description: 'Paper-thin handkerchief bread, draped warm at the table.' },
-  { id: 'br-08', category: 'Breads', name: 'Cheese Garlic Kulcha', price: 180, tag: 'New',
-    description: 'Aged cheddar, mozzarella, and roasted garlic baked in stone.' },
 
-  // ───── Desserts ─────
-  { id: 'ds-01', category: 'Desserts', name: 'Hastinapur Halwa', price: 220, tag: 'Chef',
-    description: 'Semolina halwa with raisins, cashews, and warm cardamom — served gently glistening.' },
-  { id: 'ds-02', category: 'Desserts', name: 'Royal Rabri Kulfi', price: 240, tag: 'Popular',
-    description: 'Reduced-milk kulfi with rabri, pistachio, and a thread of saffron.' },
-  { id: 'ds-03', category: 'Desserts', name: 'Saffron Phirni', price: 200,
-    description: 'Rice and milk pudding chilled in clay, perfumed with saffron and rose.' },
-  { id: 'ds-04', category: 'Desserts', name: 'Gulab Jamun Trio', price: 220,
-    description: 'Three warm jamun — classic, kala jamun, and stuffed pistachio — in cardamom syrup.' },
-  { id: 'ds-05', category: 'Desserts', name: 'Mango Shrikhand', price: 240, tag: 'New',
-    description: 'Strained yoghurt whipped with Alphonso mango and toasted almond.' },
-  { id: 'ds-06', category: 'Desserts', name: 'Rose & Pistachio Falooda', price: 260,
-    description: 'Layered rose syrup, basil seeds, vermicelli, ice cream, and crushed pistachio.' },
-  { id: 'ds-07', category: 'Desserts', name: 'Coconut Payasam', price: 220,
-    description: 'Coconut milk, jaggery, and rice — a soft, southern finish.' },
-  { id: 'ds-08', category: 'Desserts', name: 'Jaggery Gajar Ka Halwa', price: 240,
-    description: 'Slow-cooked carrot with palm jaggery, ghee, and toasted nuts.' },
+  // ───── Veg Curries ─────
+  { id: 'vc-01', category: 'Veg Curries', name: 'Paneer Butter Masala',      price: 280,
+    description: 'Cottage cheese in a silky tomato-fenugreek gravy.' },
+  { id: 'vc-02', category: 'Veg Curries', name: 'Kaju Paneer Butter Masala', price: 300,
+    description: 'Cashew-and-paneer in a rich, slow-cooked butter masala.' },
 
-  // ───── Drinks ─────
-  { id: 'dr-01', category: 'Drinks', name: 'Cardamom Masala Chai', price: 120,
-    description: 'Black tea, ginger, cardamom, and a long simmer — the way it should be.' },
-  { id: 'dr-02', category: 'Drinks', name: 'Saffron Badam Milk', price: 160,
-    description: 'Almond and milk infused with saffron — served chilled or warm.' },
-  { id: 'dr-03', category: 'Drinks', name: 'Royal Rose Lassi', price: 180, tag: 'Popular',
-    description: 'Thick yoghurt blended with rose syrup, candied fennel, and pistachio crumble.' },
-  { id: 'dr-04', category: 'Drinks', name: 'Tamarind Cooler', price: 150, tag: 'New',
-    description: 'Tamarind, jaggery, mint, and lime — bright, sour, and refreshing.' },
-  { id: 'dr-05', category: 'Drinks', name: 'Aam Panna', price: 150,
-    description: 'Green-mango cooler with roasted cumin and a hint of black salt.' },
-  { id: 'dr-06', category: 'Drinks', name: 'Jaljeera Spritz', price: 160,
-    description: 'Cumin, mint, and lime, lengthened with sparkling water.' },
-  { id: 'dr-07', category: 'Drinks', name: 'Filter Coffee', price: 130,
-    description: 'Madras-style filter coffee, brewed strong and frothed with hot milk.' },
-  { id: 'dr-08', category: 'Drinks', name: 'Spiced Buttermilk', price: 120,
-    description: 'Chaas with curry leaves, green chilli, and a pinch of asafoetida.' },
+  // ───── Non-Veg Curries ─────
+  { id: 'nc-01', category: 'Non-Veg Curries', name: 'Egg Burji',       price: 190,
+    description: 'Scrambled eggs with onion, tomato, and pepper.' },
+  { id: 'nc-02', category: 'Non-Veg Curries', name: 'Butter Chicken',  price: 290,
+    description: 'Tandoor-charred chicken in a velvety butter-tomato sauce.' },
+  { id: 'nc-03', category: 'Non-Veg Curries', name: 'Chicken Curry',   price: 270,
+    description: 'Home-style chicken curry with onion, ginger, and warm spice.' },
 ]

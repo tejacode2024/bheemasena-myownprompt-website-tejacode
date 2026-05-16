@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { Nav } from './components/layout/Nav'
 import { CartDrawer } from './components/cart/CartDrawer'
+import { OrderTimeline } from './components/cart/OrderTimeline'
 import { ReserveModal } from './components/auth/ReserveModal'
 import { Toast } from './components/ui/Toast'
 import { AuthGate } from './components/auth/AuthGate'
@@ -31,6 +32,7 @@ function App() {
       </Suspense>
 
       <CartDrawer />
+      <OrderTimeline />
       <ReserveModal />
       <Toast />
     </>

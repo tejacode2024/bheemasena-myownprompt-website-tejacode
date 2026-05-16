@@ -1,12 +1,12 @@
 import { motion } from 'motion/react'
-import { MENU_CATEGORIES, type MenuCategory } from '../../data/menu'
 
 type Props = {
-  active: MenuCategory
-  onChange: (c: MenuCategory) => void
+  active: string
+  onChange: (c: string) => void
+  categories: readonly string[]
 }
 
-export function MenuTabs({ active, onChange }: Props) {
+export function MenuTabs({ active, onChange, categories }: Props) {
   return (
     <div
       role="tablist"
@@ -20,7 +20,7 @@ export function MenuTabs({ active, onChange }: Props) {
         marginBottom: 40,
       }}
     >
-      {MENU_CATEGORIES.map((cat) => {
+      {categories.map((cat) => {
         const isActive = active === cat
         return (
           <button

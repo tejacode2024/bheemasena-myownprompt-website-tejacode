@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BLOG } from '../../data/blog'
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaPlaceholder } from '../ui/MediaPlaceholder'
 
 export function BlogStrip() {
   const posts = BLOG.slice(0, 2)
@@ -39,7 +39,7 @@ export function BlogStrip() {
       >
         {posts.map((p) => (
           <Link key={p.slug} to={`/blog/${p.slug}`} style={{ display: 'block' }}>
-            <ImagePlaceholder aspect="16/9" />
+            <MediaPlaceholder aspect="16/9" />
             <div style={{
               marginTop: 20,
               fontSize: 10, letterSpacing: '0.25em',

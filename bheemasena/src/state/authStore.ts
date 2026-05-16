@@ -1,52 +1,90 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-export type AuthUser = {
+export type User = {
   id: string
   name: string
   email: string
-  initials: string
+  phone: string
 }
+
+// Legacy alias — older components still import { AuthUser }.
+export type AuthUser = User
+
+export type AuthMode = 'unauthenticated' | 'guest' | 'authenticated'
 
 type AuthState = {
-  user: AuthUser | null
-  mode: 'authed' | 'guest' | null
-  signInWithGoogle: () => Promise<void>
+  user: User | null
+  mode: AuthMode
+  isAuthenticated: boolean
+
+  setUser: (u: User) => void
   setGuest: () => void
   logout: () => void
-  isAuthenticated: () => boolean
+
+  sendOtp: (email: string) => Promise<void>
+  verifyOtp: (email: string, otp: string) => Promise<{ isNewUser: boolean }>
+  setPassword: (email: string, password: string) => Promise<void>
+  register: (email: string, name: string, phone: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<void>
 }
 
-function computeInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).slice(0, 2)
-  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || 'U'
+async function postAuth(action: string, payload: object): Promise<any> {
+  const res = await fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...payload }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data?.error || `Request failed (${res.status})`)
+  return data
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
-      mode: null,
+      mode: 'unauthenticated',
+      isAuthenticated: false,
 
-      // TODO: replace with real Google OAuth (Firebase / Auth.js / Supabase)
-      signInWithGoogle: async () => {
-        await new Promise((r) => setTimeout(r, 400))
-        const name = 'Demo User'
-        set({
-          user: { id: 'usr_demo', name, email: 'demo@bheemasena.io', initials: computeInitials(name) },
-          mode: 'authed',
-        })
+      setUser: (u) => set({ user: u, mode: 'authenticated', isAuthenticated: true }),
+      setGuest: () => set({ user: null, mode: 'guest', isAuthenticated: false }),
+      logout: () => {
+        set({ user: null, mode: 'unauthenticated', isAuthenticated: false })
+        try { localStorage.removeItem('bhm:user') } catch { /* ignore */ }
       },
 
-      setGuest: () => set({ user: null, mode: 'guest' }),
+      sendOtp: async (email) => {
+        await postAuth('send-otp', { email })
+      },
 
-      logout: () => set({ user: null, mode: null }),
+      verifyOtp: async (email, otp) => {
+        const data = await postAuth('verify-otp', { email, otp })
+        return { isNewUser: !!data.isNewUser }
+      },
 
-      isAuthenticated: () => get().mode === 'authed' && !!get().user,
+      setPassword: async (email, password) => {
+        await postAuth('set-password', { email, password })
+      },
+
+      register: async (email, name, phone, password) => {
+        const data = await postAuth('register', { email, name, phone, password })
+        if (data?.user) {
+          set({ user: data.user, mode: 'authenticated', isAuthenticated: true })
+        }
+      },
+
+      login: async (email, password) => {
+        const data = await postAuth('login', { email, password })
+        if (data?.user) {
+          set({ user: data.user, mode: 'authenticated', isAuthenticated: true })
+        }
+      },
     }),
     {
-      name: 'bheemasena:auth',
+      name: 'bhm:user',
       storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({ user: s.user, mode: s.mode, isAuthenticated: s.isAuthenticated }),
     },
   ),
 )

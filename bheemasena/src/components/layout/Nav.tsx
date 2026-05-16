@@ -39,7 +39,7 @@ export function Nav() {
   }, [])
 
   const handleCartClick = () => {
-    const isAuthed = authMode === 'authed' && !!user
+    const isAuthed = authMode === 'authenticated' && !!user
     if (!isAuthed && authMode !== 'guest') {
       navigate(`/login?next=${encodeURIComponent(location.pathname + '?cart=open')}`)
       return

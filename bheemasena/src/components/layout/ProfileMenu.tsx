@@ -30,7 +30,10 @@ export function ProfileMenu() {
     }
   }, [open])
 
-  const isAuthed = mode === 'authed' && !!user
+  const isAuthed = mode === 'authenticated' && !!user
+  const initials = isAuthed
+    ? user!.name.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('') || 'U'
+    : ''
 
   return (
     <div ref={wrapRef} style={{ position: 'relative' }}>
@@ -50,7 +53,7 @@ export function ProfileMenu() {
         onMouseEnter={(e) => { if (!isAuthed) e.currentTarget.style.background = 'rgba(14,14,12,0.05)' }}
         onMouseLeave={(e) => { if (!isAuthed) e.currentTarget.style.background = 'transparent' }}
       >
-        {isAuthed ? user!.initials : <User size={18} strokeWidth={1.5} />}
+        {isAuthed ? initials : <User size={18} strokeWidth={1.5} />}
       </button>
 
       <AnimatePresence>

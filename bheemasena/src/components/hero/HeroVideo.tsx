@@ -41,10 +41,10 @@ export function HeroVideo() {
         height: 'min(100svh, 920px)',
         minHeight: '88svh',
         overflow: 'hidden',
-        background: 'var(--color-ink)',
+        background: 'var(--color-paper)',
       }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false}>
         {phase === 'video' ? (
           <motion.video
             key="hero-video"
@@ -89,7 +89,7 @@ export function HeroVideo() {
         style={{
           position: 'absolute', inset: 0,
           background:
-            'linear-gradient(180deg, rgba(14,14,12,0.20) 0%, rgba(14,14,12,0.05) 45%, rgba(14,14,12,0.65) 100%)',
+            'linear-gradient(180deg, rgba(251,248,243,0.55) 0%, rgba(251,248,243,0.20) 40%, rgba(251,248,243,0.10) 70%, rgba(14,14,12,0.25) 100%)',
         }}
       />
 
@@ -108,17 +108,17 @@ export function HeroVideo() {
         <motion.div variants={item} style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
           <span style={{
             display: 'inline-block', width: 28, height: 1,
-            background: 'rgba(107,101,92,0.45)', marginRight: 16,
+            background: 'rgba(14,14,12,0.55)', marginRight: 16,
           }} />
           <span style={{
             fontSize: 10, letterSpacing: '0.35em', textTransform: 'uppercase',
-            color: 'var(--color-muted)',
+            color: 'var(--color-ink)',
           }}>
             ★ Hastinapura / Est. Ancient
           </span>
         </motion.div>
 
-        <h1 style={{ margin: 0 }}>
+        <h1 style={{ margin: 0, textShadow: '0 2px 16px rgba(251,248,243,0.55)' }}>
           <ClipLine>
             <span style={lineStyle}>Celebration</span>
           </ClipLine>
@@ -141,6 +141,7 @@ export function HeroVideo() {
             fontSize: 'clamp(13px, 1.3vw, 16px)',
             lineHeight: 1.7,
             color: 'var(--color-ink)',
+            textShadow: '0 2px 16px rgba(251,248,243,0.55)',
             maxWidth: 520,
             letterSpacing: '0.02em',
             textTransform: 'none',
@@ -184,7 +185,7 @@ const lineStyle: React.CSSProperties = {
   fontWeight: 400,
   lineHeight: 0.94,
   letterSpacing: '-0.01em',
-  color: 'var(--color-muted)',
+  color: 'var(--color-ink)',
 }
 
 function ClipLine({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -204,10 +205,10 @@ function ClipLine({ children, delay = 0 }: { children: React.ReactNode; delay?: 
 function InfoBlock({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-      <span style={{ color: 'var(--color-muted)', marginTop: 2 }}>{icon}</span>
+      <span style={{ color: 'var(--color-ink)', marginTop: 2 }}>{icon}</span>
       <div>
-        <div style={{ fontSize: 9, letterSpacing: '0.25em', color: 'rgba(107,101,92,0.70)' }}>{label}</div>
-        <div style={{ fontSize: 12, color: 'var(--color-muted)', marginTop: 2 }}>{value}</div>
+        <div style={{ fontSize: 9, letterSpacing: '0.25em', color: 'var(--color-ink-soft)' }}>{label}</div>
+        <div style={{ fontSize: 12, color: 'var(--color-ink)', marginTop: 2 }}>{value}</div>
       </div>
     </div>
   )

@@ -26,7 +26,8 @@ export type Order = {
 
 type OrderState = {
   orders: Order[]
-  place: (o: Omit<Order, 'id' | 'createdAt' | 'status'>) => Order
+  lastOrder: Order | null
+  place: (o: Omit<Order, 'id' | 'createdAt' | 'status'>) => Promise<Order>
 }
 
 function genOrderId(): string {
@@ -36,24 +37,45 @@ function genOrderId(): string {
   return `BHM-${s}`
 }
 
+async function postToBackend(order: Order): Promise<void> {
+  try {
+    await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_name: order.address.fullName,
+        customer_phone: order.address.phone,
+        items: order.items.map((i) => ({ name: i.name, qty: i.qty })),
+        payment_mode: order.payment === 'COD' ? 'cod' : 'prepaid',
+        total: order.total,
+      }),
+    })
+  } catch {
+    // Silent — the local order still works even if the backend is unreachable.
+  }
+}
+
 export const useOrderStore = create<OrderState>()(
   persist(
     (set, get) => ({
       orders: [],
-      place: (draft) => {
+      lastOrder: null,
+      place: async (draft) => {
         const order: Order = {
           ...draft,
           id: genOrderId(),
           createdAt: Date.now(),
           status: 'PLACED',
         }
-        set({ orders: [order, ...get().orders] })
+        set({ orders: [order, ...get().orders], lastOrder: order })
+        await postToBackend(order)
         return order
       },
     }),
     {
       name: 'bheemasena:orders',
       storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({ orders: s.orders, lastOrder: s.lastOrder }),
     },
   ),
 )

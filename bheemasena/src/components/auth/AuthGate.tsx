@@ -10,7 +10,7 @@ export function AuthGate({ children, guestAllowed = false }: Props) {
   const user = useAuthStore((s) => s.user)
   const mode = useAuthStore((s) => s.mode)
 
-  const isAuthed = mode === 'authed' && !!user
+  const isAuthed = mode === 'authenticated' && !!user
   const allowed  = isAuthed || (guestAllowed && mode === 'guest')
 
   useEffect(() => {
