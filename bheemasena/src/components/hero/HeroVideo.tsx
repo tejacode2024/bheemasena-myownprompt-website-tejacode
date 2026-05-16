@@ -140,7 +140,7 @@ export function HeroVideo() {
             marginTop: 24,
             fontSize: 'clamp(13px, 1.3vw, 16px)',
             lineHeight: 1.7,
-            color: 'rgba(107,101,92,0.85)',
+            color: 'var(--color-ink)',
             maxWidth: 520,
             letterSpacing: '0.02em',
             textTransform: 'none',
