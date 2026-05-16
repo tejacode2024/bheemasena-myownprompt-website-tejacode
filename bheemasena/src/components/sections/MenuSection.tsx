@@ -21,11 +21,11 @@ type Category = (typeof CATEGORIES)[number]
 
 const HERO_BY_CATEGORY: Record<Category, string> = {
   'Veg Starters':     '/images/menu/category-veg-starters.jpeg',
-  'Non-Veg Starters': '/images/menu/category-non-veg-starters.jpg',
+  'Non-Veg Starters': '/images/menu/category-non-veg-starters.jpeg',
   'Veg Biryani':      '/images/menu/category-veg-biryani.jpeg',
   'Non-Veg Biryani':  '/images/menu/category-non-veg-biryani.jpeg',
   'Mini Biryani':     '/images/menu/category-mini-biryani.jpeg',
-  'Breads':           '/images/menu/category-breads.jpg',
+  'Breads':           '/images/menu/category-breads.jpeg',
   'Veg Curries':      '/images/menu/category-veg-curries.jpeg',
   'Non-Veg Curries':  '/images/menu/category-non-veg-curries.jpeg',
 }

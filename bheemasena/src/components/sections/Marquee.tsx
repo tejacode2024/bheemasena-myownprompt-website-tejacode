@@ -39,7 +39,7 @@ export function Marquee() {
                 width: 'clamp(280px, 32vw, 460px)',
               }}
             >
-              <MediaPlaceholder aspect="4/3" label="dish" src={src} />
+              <MediaPlaceholder aspect="4/3" label="dish" src={src}  />
             </div>
           ))}
         </div>

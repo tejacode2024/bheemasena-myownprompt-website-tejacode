@@ -26,7 +26,7 @@ export function Gallery() {
           let imgIdx = 0
           return TILE_PATTERN.map((filled, idx) =>
             filled ? (
-              <MediaPlaceholder key={idx} aspect="1/1" label="image" src={`/images/gallery/gallery-${++imgIdx}.jpeg`} />
+              <MediaPlaceholder key={idx} aspect="1/1" label="image" src={`/images/gallery/gallery-${++imgIdx}.jpeg`}/>
             ) : (
               <div key={idx} style={{ aspectRatio: '1/1', background: 'var(--color-cream)' }} />
             )
