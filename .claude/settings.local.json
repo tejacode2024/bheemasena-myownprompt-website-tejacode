@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(mkdir -p public/videos public/images)",
+      "Bash(cp \"../bheemasena-intro-video.mp4\" \"public/videos/bheemasena-intro-video.mp4\")",
+      "Bash(cp \"../bheemasena-intro-picture.jpeg\" \"public/images/bheemasena-intro-picture.jpg\")",
+      "Bash(cp \"../login-page-video.mov\" \"public/videos/login-page-video.mp4\")",
+      "Bash(npm run *)",
+      "Bash(node *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

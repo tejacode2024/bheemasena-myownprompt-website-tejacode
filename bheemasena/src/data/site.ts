@@ -1,0 +1,20 @@
+export const SITE = {
+  name: 'Bheemasena',
+  tagline: 'Royal Feast',
+  location: 'TBD — client to provide city',
+  address: 'TBD — client to provide full address',
+  hoursWeekday: 'Mon–Thu · 11:30am – 11pm',
+  hoursWeekend: 'Fri–Sun · 11:30am – Midnight',
+  phoneDisplay: '+91 000 000 0000',
+  phoneE164:    '+910000000000',
+  email: 'hello@bheemasena.io',
+  zomatoUrl: 'https://www.zomato.com/REPLACE_ME',
+  socials: {
+    instagram:   'https://instagram.com/REPLACE_ME',
+    facebook:    'https://facebook.com/REPLACE_ME',
+    tripadvisor: 'https://tripadvisor.com/REPLACE_ME',
+  },
+  currency: 'INR',
+  currencySymbol: '₹',
+  taxRate: 0.05,
+} as const

@@ -1,0 +1,15 @@
+{
+  "name": "bheemasena-root",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:admin": "cd bheemasena-admin && npm run dev",
+    "build:admin": "cd bheemasena-admin && npm install && npm run build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "exceljs": "^4.4.0",
+    "nodemailer": "^8.0.7"
+  }
+}
