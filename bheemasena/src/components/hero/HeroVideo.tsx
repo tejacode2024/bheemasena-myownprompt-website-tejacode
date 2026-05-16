@@ -114,6 +114,7 @@ export function HeroVideo() {
           <span style={{
             fontSize: 10, letterSpacing: '0.35em', textTransform: 'uppercase',
             color: 'var(--color-ink)',
+            WebkitTextStroke: '0.4px currentColor',
           }}>
             ★ Hastinapura / Est. Ancient
           </span>
@@ -143,6 +144,7 @@ export function HeroVideo() {
             lineHeight: 1.7,
             color: 'var(--color-ink)',
             textShadow: '0 2px 16px rgba(251,248,243,0.55)',
+            WebkitTextStroke: '0.4px currentColor',
             maxWidth: 520,
             letterSpacing: '0.02em',
             textTransform: 'none',
@@ -155,12 +157,15 @@ export function HeroVideo() {
           variants={item}
           style={{ marginTop: 32, display: 'flex', gap: 12, flexWrap: 'wrap' }}
         >
-          <button type="button" className="pill-btn pill-primary" onClick={openReserve}>
-            BOOK A TABLE →
-          </button>
-          <Link to="/menu" className="pill-btn pill-secondary">
+          {/* SEE MENU now sits first and wears the primary pill styling.
+              BOOK A TABLE moves to second with the secondary styling.
+              Handlers (navigate to /menu / openReserve) are unchanged. */}
+          <Link to="/menu" className="pill-btn pill-primary">
             SEE MENU →
           </Link>
+          <button type="button" className="pill-btn pill-secondary" onClick={openReserve}>
+            BOOK A TABLE →
+          </button>
         </motion.div>
 
         <motion.div
@@ -187,6 +192,9 @@ const lineStyle: React.CSSProperties = {
   lineHeight: 0.94,
   letterSpacing: '-0.01em',
   color: 'var(--color-ink)',
+  // Instrument Serif only ships weight 400; -webkit-text-stroke gives
+  // the glyphs visible extra thickness without swapping the font.
+  WebkitTextStroke: '1px currentColor',
 }
 
 function ClipLine({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -208,8 +216,14 @@ function InfoBlock({ icon, label, value }: { icon: React.ReactNode; label: strin
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
       <span style={{ color: 'var(--color-ink)', marginTop: 2 }}>{icon}</span>
       <div>
-        <div style={{ fontSize: 9, letterSpacing: '0.25em', color: 'var(--color-ink-soft)' }}>{label}</div>
-        <div style={{ fontSize: 12, color: 'var(--color-ink)', marginTop: 2 }}>{value}</div>
+        <div style={{
+          fontSize: 9, letterSpacing: '0.25em', color: 'var(--color-ink-soft)',
+          WebkitTextStroke: '0.4px currentColor',
+        }}>{label}</div>
+        <div style={{
+          fontSize: 12, color: 'var(--color-ink)', marginTop: 2,
+          WebkitTextStroke: '0.4px currentColor',
+        }}>{value}</div>
       </div>
     </div>
   )

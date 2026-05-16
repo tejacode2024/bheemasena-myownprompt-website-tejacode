@@ -4,6 +4,7 @@ import { Plus, Minus } from 'lucide-react'
 import type { MenuItem } from '../../data/menu'
 import { useCartStore } from '../../state/cartStore'
 import { useUIStore } from '../../state/uiStore'
+import { useConfigStore } from '../../state/configStore'
 import { Tag } from '../ui/Tag'
 import { formatPrice } from '../../lib/format'
 
@@ -15,9 +16,15 @@ export function MenuRow({ item, index = 0 }: Props) {
   const inc   = useCartStore((s) => s.inc)
   const dec   = useCartStore((s) => s.dec)
   const toast = useUIStore((s) => s.toast)
+  const siteOnline    = useConfigStore((s) => s.siteOnline)
+  const closedMessage = useConfigStore((s) => s.closedMessage)
   const [pulse, setPulse] = useState(0)
 
   const handleAdd = () => {
+    if (!siteOnline) {
+      toast(closedMessage, 'info')
+      return
+    }
     add({ id: item.id, name: item.name, price: item.price, tag: item.tag, image: item.image })
     toast('Added to cart', 'success')
     setPulse((p) => p + 1)

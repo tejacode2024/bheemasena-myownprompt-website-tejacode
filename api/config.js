@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     let body
     try { body = await readJSON(req) } catch { return res.status(400).json({ error: 'Bad JSON' }) }
 
-    const allowed = ['site_online', 'item_flags', 'price_overrides',
+    const allowed = ['site_online', 'closed_message', 'item_flags', 'price_overrides',
                      'original_price_overrides', 'hidden_items', 'category_headings']
     const patch = {}
     for (const k of allowed) if (k in body) patch[k] = body[k]
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
       const [row] = await sql`
         UPDATE config SET
           site_online              = COALESCE(${patch.site_online ?? null}, site_online),
+          closed_message           = COALESCE(${patch.closed_message ?? null}, closed_message),
           item_flags               = COALESCE(${patch.item_flags ?? null}::jsonb, item_flags),
           price_overrides          = COALESCE(${patch.price_overrides ?? null}::jsonb, price_overrides),
           original_price_overrides = COALESCE(${patch.original_price_overrides ?? null}::jsonb, original_price_overrides),

@@ -18,6 +18,9 @@ const LINKS = [
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.innerWidth < 768,
+  )
 
   const lang        = useUIStore((s) => s.lang)
   const toggleLang  = useUIStore((s) => s.toggleLang)
@@ -35,6 +38,12 @@ export function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
   const handleCartClick = () => {
@@ -128,28 +137,42 @@ export function Nav() {
             aria-label={`Open cart, ${cartCount} item${cartCount === 1 ? '' : 's'}`}
             style={{
               position: 'relative',
-              width: 40, height: 40,
+              width: isMobile ? 48 : 40,
+              height: isMobile ? 48 : 40,
               borderRadius: '50%',
-              background: 'transparent',
+              // Subtle pill background on mobile so the icon stands
+              // out and is easy to thumb-tap.
+              background: isMobile ? 'var(--color-cream)' : 'transparent',
               border: 'none', cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.2s ease',
               marginLeft: 4,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(14,14,12,0.05)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = isMobile
+              ? 'var(--color-cream)'
+              : 'rgba(14,14,12,0.05)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = isMobile
+              ? 'var(--color-cream)'
+              : 'transparent')}
           >
-            <ShoppingBag size={18} strokeWidth={1.5} />
+            <ShoppingBag size={isMobile ? 22 : 18} strokeWidth={1.6} />
             {cartCount > 0 && (
               <span style={{
                 position: 'absolute',
-                top: -2, right: -2,
-                width: 16, height: 16,
-                borderRadius: '50%',
+                top: isMobile ? -4 : -2,
+                right: isMobile ? -4 : -2,
+                minWidth: isMobile ? 22 : 16,
+                height: isMobile ? 22 : 16,
+                padding: isMobile ? '0 6px' : 0,
+                borderRadius: 999,
                 background: 'var(--color-accent)',
                 color: '#fff',
-                fontSize: 9,
+                fontSize: isMobile ? 12 : 9,
+                fontWeight: 500,
+                lineHeight: 1,
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                border: '2px solid var(--color-paper)',
+                boxShadow: isMobile ? '0 2px 6px rgba(14,14,12,0.18)' : 'none',
               }}>{cartCount}</span>
             )}
           </button>

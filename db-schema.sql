@@ -46,6 +46,7 @@ $$;
 CREATE TABLE IF NOT EXISTS config (
   id                        INTEGER      PRIMARY KEY DEFAULT 1,
   site_online               BOOLEAN      NOT NULL DEFAULT TRUE,
+  closed_message            TEXT         NOT NULL DEFAULT 'The website is temporarily closed — come back soon.',
   item_flags                JSONB        NOT NULL DEFAULT '{}'::JSONB,
   price_overrides           JSONB        NOT NULL DEFAULT '{}'::JSONB,
   original_price_overrides  JSONB        NOT NULL DEFAULT '{}'::JSONB,
@@ -54,6 +55,11 @@ CREATE TABLE IF NOT EXISTS config (
   updated_at                TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 INSERT INTO config (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+-- Idempotent column add for existing databases that pre-date the
+-- closed_message column.
+ALTER TABLE config
+  ADD COLUMN IF NOT EXISTS closed_message TEXT
+  NOT NULL DEFAULT 'The website is temporarily closed — come back soon.';
 
 -- 4. MENU_ITEMS (admin-added dynamic items)
 CREATE TABLE IF NOT EXISTS menu_items (

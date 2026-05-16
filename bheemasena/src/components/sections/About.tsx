@@ -15,7 +15,6 @@ export function About() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-        style={{ marginBottom: 48 }}
       >
         <div style={{
           width: 60, height: 1,
@@ -31,7 +30,7 @@ export function About() {
           EST. ANCIENT · HASTINAPURA
         </div>
 
-        <h2 style={{
+        <h2 id="about-heading" style={{
           margin: '12px 0 0',
           fontSize: 'clamp(52px, 10vw, 120px)',
           fontWeight: 400,
@@ -65,35 +64,6 @@ export function About() {
           }} />
         </div>
       </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <span id="about-heading" className="eyebrow" style={{ marginBottom: 24, display: 'inline-block' }}>
-          ABOUT
-        </span>
-      </motion.div>
-
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
-        style={{
-          fontSize: 'clamp(20px, 2.4vw, 32px)',
-          lineHeight: 1.5,
-          color: 'var(--color-ink)',
-          marginTop: 24,
-        }}
-      >
-        Born of the Mahabharata legend, <em>Bheemasena</em> honours the warrior whose hunger was as mighty as his mace.
-        Our kitchen draws from the <em>royal courts</em> of Hastinapura, the <em>spice routes</em> of the Deccan,
-        and the <em>coastal feasts</em> of the Konkan — served in a room where tradition and contemporary craft
-        sit at the same table.
-      </motion.p>
     </section>
   )
 }

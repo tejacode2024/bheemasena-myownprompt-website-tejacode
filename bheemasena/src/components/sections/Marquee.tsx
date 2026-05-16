@@ -234,7 +234,7 @@ export function Marquee() {
                 style={{
                   width: cardWidth,
                   height: CARD_HEIGHT,
-                  borderRadius: 4,
+                  borderRadius: 18,
                   overflow: 'hidden',
                   flexShrink: 0,
                   cursor: isActive ? 'grab' : 'pointer',

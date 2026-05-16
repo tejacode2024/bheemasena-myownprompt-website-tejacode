@@ -6,6 +6,7 @@ import { OrderTimeline } from './components/cart/OrderTimeline'
 import { ReserveModal } from './components/auth/ReserveModal'
 import { Toast } from './components/ui/Toast'
 import { AuthGate } from './components/auth/AuthGate'
+import { useConfigStore } from './state/configStore'
 
 const Landing   = lazy(() => import('./routes/Landing'))
 const MenuPage  = lazy(() => import('./routes/MenuPage'))
@@ -28,6 +29,12 @@ function ScrollToTop() {
 }
 
 function App() {
+  // Pull the live site_online / closed_message values from the admin
+  // config once on mount. Other components read from the store; if the
+  // request fails we keep the optimistic defaults (siteOnline = true).
+  const loadConfig = useConfigStore((s) => s.load)
+  useEffect(() => { loadConfig() }, [loadConfig])
+
   return (
     <>
       <Nav />

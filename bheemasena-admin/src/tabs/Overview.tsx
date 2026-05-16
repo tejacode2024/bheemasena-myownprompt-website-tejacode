@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   IndianRupee, ShoppingBag, Hourglass, CheckCircle2,
   Banknote, CreditCard, Download,
@@ -15,8 +15,31 @@ import { loadExcelJS, triggerDownload } from '../lib/excel'
 export function OverviewTab() {
   const orders = useOrdersStore(s => s.orders)
   const siteOnline = useAdminStore(s => s.siteOnline)
+  const closedMessageSaved = useAdminStore(s => s.closedMessage)
   const patchConfig = useAdminStore(s => s.patchConfig)
   const toast = useUIStore(s => s.addToast)
+
+  // Local draft of the closed-message text so the textarea stays
+  // responsive while typing; Save button pushes it to the API.
+  const [closedDraft, setClosedDraft] = useState(closedMessageSaved)
+  const [savingClosed, setSavingClosed] = useState(false)
+  // If another admin updates the message elsewhere, keep our local
+  // textarea in sync as long as the user hasn't started editing.
+  useEffect(() => { setClosedDraft(closedMessageSaved) }, [closedMessageSaved])
+  const closedDirty = closedDraft !== closedMessageSaved
+
+  async function saveClosedMessage() {
+    if (!closedDirty || savingClosed) return
+    setSavingClosed(true)
+    try {
+      await patchConfig({ closed_message: closedDraft.trim() })
+      toast('Closed message saved', 'success')
+    } catch {
+      toast('Could not save closed message', 'error')
+    } finally {
+      setSavingClosed(false)
+    }
+  }
 
   const stats = useMemo(() => {
     const total = orders.reduce((s, o) => s + o.total, 0)
@@ -70,6 +93,70 @@ export function OverviewTab() {
         </div>
         <div style={{ marginTop: 12 }}>
           <Tag tone={siteOnline ? 'online' : 'offline'}>{siteOnline ? 'Live' : 'Offline'}</Tag>
+        </div>
+
+        {/* Custom closed-message editor. Shown to user-site customers
+            via toast when they tap the "+" on a menu item while
+            site_online is false. */}
+        <div style={{
+          marginTop: 24, paddingTop: 20,
+          borderTop: '1px solid var(--color-admin-border-sub)',
+        }}>
+          <label
+            htmlFor="closed-message"
+            style={{
+              display: 'block',
+              fontSize: 11, letterSpacing: '0.2em',
+              textTransform: 'uppercase', color: 'var(--color-muted)',
+              marginBottom: 8,
+            }}
+          >
+            Closed message
+          </label>
+          <div style={{ fontSize: 12, color: 'var(--color-muted)', marginBottom: 10 }}>
+            Shown to customers when they tap “+” while orders are closed.
+          </div>
+          <textarea
+            id="closed-message"
+            value={closedDraft}
+            onChange={(e) => setClosedDraft(e.target.value)}
+            rows={3}
+            placeholder="The website is temporarily closed — come back soon."
+            style={{
+              width: '100%',
+              padding: '12px 14px',
+              fontFamily: 'inherit', fontSize: 13, lineHeight: 1.5,
+              color: 'var(--color-ink)',
+              background: 'var(--color-cream)',
+              border: '1px solid var(--color-admin-border)',
+              borderRadius: 6,
+              resize: 'vertical',
+              boxSizing: 'border-box',
+            }}
+          />
+          <div style={{
+            display: 'flex', justifyContent: 'flex-end',
+            gap: 8, marginTop: 10,
+          }}>
+            {closedDirty && (
+              <button
+                type="button"
+                className="pill-btn pill-ghost"
+                onClick={() => setClosedDraft(closedMessageSaved)}
+                disabled={savingClosed}
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="button"
+              className="pill-btn pill-primary"
+              onClick={saveClosedMessage}
+              disabled={!closedDirty || savingClosed}
+            >
+              {savingClosed ? 'Saving…' : 'Save message'}
+            </button>
+          </div>
         </div>
       </section>
 

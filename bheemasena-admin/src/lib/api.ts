@@ -67,6 +67,9 @@ export type RawOrder = {
 export type ConfigRow = {
   id: number
   site_online: boolean
+  /** Message shown to user-site customers when the site is offline
+   *  and they try to add an item to the cart. */
+  closed_message: string
   item_flags: Record<string, boolean>
   price_overrides: Record<string, number>
   original_price_overrides: Record<string, number>

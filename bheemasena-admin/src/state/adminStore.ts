@@ -3,10 +3,13 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { api } from '../lib/api'
 import type { ConfigRow } from '../lib/api'
 
+const DEFAULT_CLOSED_MESSAGE = 'The website is temporarily closed — come back soon.'
+
 type AdminState = {
   authed: boolean
   secret: string
   siteOnline: boolean
+  closedMessage: string
   itemFlags: Record<string, boolean>
   priceOverrides: Record<string, number>
   originalPriceOverrides: Record<string, number>
@@ -18,6 +21,7 @@ type AdminState = {
   login: (pwd: string) => boolean
   logout: () => void
   setSiteOnline: (v: boolean) => void
+  setClosedMessage: (msg: string) => void
   patchConfig: (update: Partial<ConfigRow>) => Promise<void>
   loadConfig: () => Promise<void>
   flash: (msg: string) => void
@@ -31,6 +35,7 @@ export const useAdminStore = create<AdminState>()(
       authed: false,
       secret: '',
       siteOnline: true,
+      closedMessage: DEFAULT_CLOSED_MESSAGE,
       itemFlags: {},
       priceOverrides: {},
       originalPriceOverrides: {},
@@ -51,6 +56,7 @@ export const useAdminStore = create<AdminState>()(
         try { sessionStorage.removeItem('bhm:admin') } catch { /* ignore */ }
       },
       setSiteOnline: (v: boolean) => set({ siteOnline: v }),
+      setClosedMessage: (msg: string) => set({ closedMessage: msg }),
 
       patchConfig: async (update) => {
         const secret = get().secret
@@ -60,6 +66,7 @@ export const useAdminStore = create<AdminState>()(
           const next = await api.patchConfig(update, secret)
           set({
             siteOnline: !!next.site_online,
+            closedMessage: next.closed_message ?? DEFAULT_CLOSED_MESSAGE,
             itemFlags: next.item_flags ?? {},
             priceOverrides: next.price_overrides ?? {},
             originalPriceOverrides: next.original_price_overrides ?? {},
@@ -81,6 +88,7 @@ export const useAdminStore = create<AdminState>()(
           const cfg = await api.fetchConfig()
           set({
             siteOnline: !!cfg.site_online,
+            closedMessage: cfg.closed_message ?? DEFAULT_CLOSED_MESSAGE,
             itemFlags: cfg.item_flags ?? {},
             priceOverrides: cfg.price_overrides ?? {},
             originalPriceOverrides: cfg.original_price_overrides ?? {},
