@@ -76,7 +76,7 @@ export function Nav() {
 
           <nav
             aria-label="Primary"
-            style={{ display: 'flex', alignItems: 'center', padding: '0 8px', height: '100%' }}
+            style={{ alignItems: 'center', padding: '0 8px', height: '100%' }}
             className="hidden md:flex"
           >
             {LINKS.map((l) => (
@@ -170,12 +170,12 @@ export function Nav() {
             type="button"
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
-            className="md:hidden"
+            className="inline-flex md:hidden"
             style={{
               width: 40, height: 40,
               borderRadius: '50%',
               background: 'transparent', border: 'none', cursor: 'pointer',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              alignItems: 'center', justifyContent: 'center',
               marginLeft: 4, marginRight: 4,
             }}
           >
