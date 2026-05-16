@@ -9,7 +9,6 @@ const LINKS = [
   { label: 'About',    to: '/#about'    },
   { label: 'Menu',     to: '/menu'      },
   { label: 'Orders',   to: '/orders'    },
-  { label: 'Team',     to: '/#team'     },
   { label: 'Blog',     to: '/blog'      },
   { label: 'Contacts', to: '/#contacts' },
 ]
@@ -35,6 +34,12 @@ export function MobileNav({ open, onClose, onReserve }: Props) {
 
   const handleCart = () => {
     onClose()
+    // Guests / unauthenticated users → /login first; only signed-in
+    // users can open the cart drawer.
+    if (!isAuthed) {
+      navigate(`/login?next=${encodeURIComponent(location.pathname + '?cart=open')}`)
+      return
+    }
     setTimeout(openCart, 150)
   }
   const handleProfile = () => {

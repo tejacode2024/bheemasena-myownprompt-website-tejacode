@@ -5,6 +5,7 @@ import { useUIStore } from '../../state/uiStore'
 import { useCartStore } from '../../state/cartStore'
 import { useAuthStore } from '../../state/authStore'
 import { useOrderStore } from '../../state/orderStore'
+import { addressDisplay } from '../../state/orderStore'
 import { formatPrice } from '../../lib/format'
 
 const DURATION = 30 // seconds
@@ -183,9 +184,8 @@ export function OrderTimeline() {
                 <div style={{ fontSize: 13, color: 'var(--color-cream)', lineHeight: 1.6 }}>
                   {draft.address.fullName} · {draft.address.phone}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--color-cream)', lineHeight: 1.6, marginTop: 4 }}>
-                  {[draft.address.flat, draft.address.street, draft.address.landmark, draft.address.city, draft.address.pincode]
-                    .filter(Boolean).join(', ')}
+                <div style={{ fontSize: 13, color: 'var(--color-cream)', lineHeight: 1.6, marginTop: 4, whiteSpace: 'pre-wrap' }}>
+                  {addressDisplay(draft.address)}
                 </div>
                 <div style={{
                   marginTop: 6,

@@ -11,7 +11,6 @@ const LINKS = [
   { label: 'About',    to: '/#about'    },
   { label: 'Menu',     to: '/menu'      },
   { label: 'Orders',   to: '/orders'    },
-  { label: 'Team',     to: '/#team'     },
   { label: 'Blog',     to: '/blog'      },
   { label: 'Contacts', to: '/#contacts' },
 ]
@@ -40,7 +39,9 @@ export function Nav() {
 
   const handleCartClick = () => {
     const isAuthed = authMode === 'authenticated' && !!user
-    if (!isAuthed && authMode !== 'guest') {
+    // Guests AND unauthenticated users get bounced to /login — checkout
+    // requires a real account.
+    if (!isAuthed) {
       navigate(`/login?next=${encodeURIComponent(location.pathname + '?cart=open')}`)
       return
     }

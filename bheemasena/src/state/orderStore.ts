@@ -5,11 +5,24 @@ import type { CartItem } from './cartStore'
 export type AddressData = {
   fullName: string
   phone: string
-  flat: string
-  street: string
+  /** Free-form delivery address — everything the rider needs in one box. */
+  address: string
+  // Legacy fields preserved for back-compat with orders persisted before
+  // we switched to the single-textarea address. Newly placed orders
+  // leave these undefined; old orders may still have them.
+  flat?: string
+  street?: string
   landmark?: string
-  city: string
-  pincode: string
+  city?: string
+  pincode?: string
+}
+
+/** Render an address as a single display string, handling both the
+ *  new single-textarea shape and the legacy multi-field shape. */
+export function addressDisplay(a: AddressData): string {
+  if (a.address && a.address.trim()) return a.address
+  return [a.flat, a.street, a.landmark, a.city, a.pincode]
+    .filter(Boolean).join(', ')
 }
 
 export type Order = {
