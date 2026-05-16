@@ -27,14 +27,15 @@ const N = CARDS.length
 const CARD_GAP = 16
 const ASPECT = 3 / 4  // width : height
 
-// 5 copies of the cards array. The middle copy is "home"; the active
-// index is allowed to drift through copies, with a silent re-anchor
-// back to the middle only when active reaches the very outer copies.
-const COPIES = 5
+// 3 copies of the cards array. The middle copy is "home"; when active
+// drifts into an outer copy we silently re-anchor back to home. Fewer
+// copies means much less per-frame work — important for mobile drag.
+const COPIES = 3
 const VIRTUAL = N * COPIES
 const SAFE_START = N            // 8
-const SAFE_END = (COPIES - 1) * N - 1  // 31
-const INITIAL_ACTIVE = Math.floor(VIRTUAL / 2)  // 20
+const SAFE_END = 2 * N - 1      // 15
+const INITIAL_ACTIVE = Math.floor(VIRTUAL / 2)  // 12
+const MIDDLE_COPY_START = N     // 8
 
 // Cubic ease-out tween — deterministic, no spring overshoot.
 const TWEEN = {
@@ -94,11 +95,18 @@ export function Marquee() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  // Always read the latest active inside the resize-snap effect without
+  // putting `active` in the dep array (we only want to snap on resize).
+  const activeRef = useRef(active)
+  activeRef.current = active
+
   useEffect(() => {
-    // After cardWidth changes, snap x to whatever the new centered
-    // position for the current active is — no animation, just a jump.
-    x.set(centeredOffset(active))
-  }, [cardWidth, active, centeredOffset, x])
+    // After cardWidth changes, snap x to the current active's new centered
+    // position — no animation, just a jump. Crucially does NOT fire on
+    // active changes; those go through slideTo with a smooth tween.
+    x.set(centeredOffset(activeRef.current))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [centeredOffset, x])
 
   // Slide x to the target's centered position. After the tween settles
   // (and only if this is still the latest target, and the user isn't
@@ -114,7 +122,7 @@ export function Marquee() {
       if (isDraggingRef.current) return
       if (target < SAFE_START || target > SAFE_END) {
         // Bring active into the middle copy at the same modular index.
-        const safe = 2 * N + ((target % N) + N) % N
+        const safe = MIDDLE_COPY_START + ((target % N) + N) % N
         x.set(centeredOffset(safe))
         currentTargetRef.current = safe
         setActive(safe)
@@ -124,6 +132,12 @@ export function Marquee() {
 
   const handleDragStart = () => {
     isDraggingRef.current = true
+    // Don't flip dragMovedRef here — motion fires onDragStart on the
+    // first pixel of movement, but we only want to suppress the
+    // following synthetic click if the user *actually* dragged. That
+    // gets set in onDrag below, which fires on every drag movement.
+  }
+  const handleDrag = () => {
     dragMovedRef.current = true
   }
 
@@ -160,10 +174,11 @@ export function Marquee() {
 
   // Mouse click + touch — onClick fires reliably on both. The
   // dragMovedRef guard suppresses the synthetic click that fires
-  // right after a real drag ends.
+  // right after a real drag ends. Animations CAN be interrupted by a
+  // tap, so we don't gate on animatingRef.
   const handleCardClick = (i: number) => {
     if (dragMovedRef.current) return
-    if (animatingRef.current || isDraggingRef.current) return
+    if (isDraggingRef.current) return
     if (i === active) return
     setActive(i)
     slideTo(i)
@@ -194,6 +209,7 @@ export function Marquee() {
           dragMomentum={false}
           dragElastic={0.18}
           onDragStart={handleDragStart}
+          onDrag={handleDrag}
           onDragEnd={handleDragEnd}
           style={{
             x,
@@ -229,9 +245,12 @@ export function Marquee() {
                   transformStyle: 'preserve-3d',
                   position: 'relative',
                   border: '1px solid rgba(14,14,12,0.08)',
+                  // Active card gets a layered drop-shadow so it visibly
+                  // floats above the others. Inactive cards get a softer,
+                  // tighter shadow so they recede in the perspective curve.
                   boxShadow: isActive
-                    ? '0 24px 64px rgba(14,14,12,0.18)'
-                    : '0 8px 24px rgba(14,14,12,0.08)',
+                    ? '0 4px 12px rgba(14,14,12,0.10), 0 28px 60px rgba(14,14,12,0.28), 0 56px 100px rgba(14,14,12,0.18)'
+                    : '0 3px 10px rgba(14,14,12,0.05)',
                   userSelect: 'none',
                   WebkitUserDrag: 'none',
                 } as React.CSSProperties}
