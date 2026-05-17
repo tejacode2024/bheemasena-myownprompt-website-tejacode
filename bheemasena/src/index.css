@@ -304,8 +304,17 @@ textarea.field-input { height: auto; padding: 12px 14px; resize: vertical; line-
     gap: 20px !important;
   }
   #menu[data-variant="preview"] .menu-block-media {
-    aspect-ratio: 16/9 !important;
+    /* 4:3 fits food photography better than 16:9 (which clipped the
+       top/bottom of the dish). Combined with object-fit:contain on the
+       img inside, the whole photo is always visible — any leftover space
+       falls back to the cream wrapper colour and looks intentional. */
+    aspect-ratio: 4/3 !important;
     border-radius: 12px;
+    background: var(--color-cream);
+  }
+  #menu[data-variant="preview"] .menu-block-media img,
+  #menu[data-variant="preview"] .menu-block-media video {
+    object-fit: contain !important;
   }
   #menu[data-variant="preview"] .menu-cat-title {
     font-size: clamp(26px, 7vw, 34px) !important;
