@@ -84,10 +84,10 @@ export function Nav() {
             }}>Royal Feast</span>
           </Link>
 
+          {!isMobile && (
           <nav
             aria-label="Primary"
-            style={{ alignItems: 'center', padding: '0 8px', height: '100%' }}
-            className="hidden md:flex"
+            style={{ display: 'flex', alignItems: 'center', padding: '0 8px', height: '100%' }}
           >
             {LINKS.map((l) => (
               <Link
@@ -115,6 +115,7 @@ export function Nav() {
               </Link>
             ))}
           </nav>
+          )}
 
           <button
             type="button"
@@ -190,21 +191,22 @@ export function Nav() {
             RESERVE →
           </button>
 
+          {isMobile && (
           <button
             type="button"
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex md:hidden"
             style={{
               width: 40, height: 40,
               borderRadius: '50%',
               background: 'transparent', border: 'none', cursor: 'pointer',
-              alignItems: 'center', justifyContent: 'center',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               marginLeft: 4, marginRight: 4,
             }}
           >
             <MenuIcon size={20} strokeWidth={1.5} />
           </button>
+          )}
         </div>
       </header>
 

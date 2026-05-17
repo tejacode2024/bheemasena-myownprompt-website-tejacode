@@ -101,6 +101,7 @@ export function HeroVideo() {
           position: 'relative', zIndex: 10,
           height: '100%',
           padding: 'clamp(90px,11vw,150px) clamp(24px,6vw,96px) clamp(48px,6vw,80px)',
+          paddingTop: 'clamp(88px, 14vw, 160px)',
           paddingBottom: 'clamp(64px, 8vw, 100px)',
           display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
           maxWidth: 1280, margin: '0 auto',
@@ -142,7 +143,7 @@ export function HeroVideo() {
           variants={item}
           style={{
             marginTop: 24,
-            fontSize: 'clamp(13px, 1.3vw, 16px)',
+            fontSize: 'clamp(11px, 3vw, 16px)',
             lineHeight: 1.7,
             color: 'var(--color-ink)',
             fontWeight: 600,
@@ -176,7 +177,7 @@ export function HeroVideo() {
           style={{
             marginTop: 40,
             display: 'flex', flexWrap: 'wrap',
-            gap: '24px 40px',
+            gap: 'clamp(12px, 4vw, 40px)',
           }}
         >
           <InfoBlock icon={<MapPin size={16} strokeWidth={1.5} />} label="LOCATION" value={SITE.address} />
@@ -190,9 +191,9 @@ export function HeroVideo() {
 
 const lineStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: 'clamp(36px, 7vw, 100px)',
+  fontSize: 'clamp(28px, 8vw, 100px)',
   fontWeight: 700,
-  lineHeight: 1.0,
+  lineHeight: 1.05,
   letterSpacing: '-0.01em',
   color: 'var(--color-ink)',
   // Instrument Serif only ships weight 400; -webkit-text-stroke gives
@@ -220,13 +221,13 @@ function InfoBlock({ icon, label, value }: { icon: React.ReactNode; label: strin
       <span style={{ color: 'var(--color-ink)', marginTop: 2 }}>{icon}</span>
       <div>
         <div style={{
-          fontSize: 9, letterSpacing: '0.28em', color: 'rgba(246,242,236,0.90)',
+          fontSize: 'clamp(8px, 2vw, 10px)', letterSpacing: '0.28em', color: 'rgba(246,242,236,0.90)',
           fontWeight: 700,
           textShadow: '0 1px 4px rgba(0,0,0,0.6)',
           WebkitTextStroke: '0.4px currentColor',
         }}>{label}</div>
         <div style={{
-          fontSize: 13, color: '#FFFFFF', marginTop: 2,
+          fontSize: 'clamp(10px, 2.5vw, 13px)', color: '#FFFFFF', marginTop: 2,
           fontWeight: 600,
           textShadow: '0 1px 4px rgba(0,0,0,0.6)',
           WebkitTextStroke: '0.4px currentColor',
