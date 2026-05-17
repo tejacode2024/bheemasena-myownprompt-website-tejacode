@@ -283,5 +283,37 @@ textarea.field-input { height: auto; padding: 12px 14px; resize: vertical; line-
   .menu-block { grid-template-columns: 1fr !important; }
   .menu-block-media { order: 0 !important; }
   .menu-block-list  { order: 1 !important; }
+
+  /* ── Landing-only mobile polish ───────────────────────────────
+     The landing-page MenuSection adds data-variant="preview" to its
+     <section> so we can tighten only that block on mobile without
+     touching the full /menu page's layout. */
+  #menu[data-variant="preview"] {
+    padding: clamp(48px, 9vw, 80px) clamp(16px, 4vw, 24px) !important;
+  }
+  #menu[data-variant="preview"] > div:first-child {
+    margin-bottom: 24px !important;
+  }
+  #menu[data-variant="preview"] #menu-heading {
+    font-size: clamp(32px, 8.5vw, 44px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.005em !important;
+  }
+  #menu[data-variant="preview"] .menu-block {
+    padding: 16px 0 24px !important;
+    gap: 20px !important;
+  }
+  #menu[data-variant="preview"] .menu-block-media {
+    aspect-ratio: 16/9 !important;
+    border-radius: 12px;
+  }
+  #menu[data-variant="preview"] .menu-cat-title {
+    font-size: clamp(26px, 7vw, 34px) !important;
+    line-height: 1.1 !important;
+  }
+  #menu[data-variant="preview"] .menu-cat-divider {
+    width: 48px !important;
+    margin: 10px 0 18px !important;
+  }
 }
 

@@ -5,7 +5,6 @@ import { About } from '../components/sections/About'
 import { Marquee } from '../components/sections/Marquee'
 import { Gallery } from '../components/sections/Gallery'
 import { MenuSection } from '../components/sections/MenuSection'
-import { GiftCard } from '../components/sections/GiftCard'
 import { Reviews } from '../components/sections/Reviews'
 import { BlogStrip } from '../components/sections/BlogStrip'
 import { Contacts } from '../components/sections/Contacts'
@@ -31,7 +30,6 @@ export default function Landing() {
       <Marquee />
       <Gallery />
       <MenuSection variant="preview" />
-      <GiftCard />
       <Reviews />
       <BlogStrip />
       <Contacts />

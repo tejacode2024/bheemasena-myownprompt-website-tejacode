@@ -54,6 +54,7 @@ export function MenuSection({ variant = 'preview' }: Props) {
     <section
       id="menu"
       aria-labelledby="menu-heading"
+      data-variant={variant}
       style={{
         padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px)',
         maxWidth: 1280, margin: '0 auto',
@@ -94,6 +95,7 @@ export function MenuSection({ variant = 'preview' }: Props) {
         categories={CATEGORIES as readonly string[]}
         active={active}
         onChange={(c) => setActive(c as Category)}
+        mobilePills={variant === 'preview'}
       />
 
       {variant === 'preview' ? (

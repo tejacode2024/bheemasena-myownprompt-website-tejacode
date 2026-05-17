@@ -185,7 +185,9 @@ export function Marquee() {
 
   return (
     <section style={{
-      padding: 'clamp(48px,7vw,100px) 0',
+      // Tight top padding so the carousel sits right under the
+      // "Hotel Bheemasena" heading from the About section.
+      padding: 'clamp(16px,2.5vw,32px) 0 clamp(48px,7vw,100px)',
       background: 'var(--color-paper)',
       overflow: 'hidden',
     }}>

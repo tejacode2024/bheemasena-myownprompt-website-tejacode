@@ -6,7 +6,10 @@ export function About() {
       id="about"
       aria-labelledby="about-heading"
       style={{
-        padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px)',
+        // Asymmetric padding: keep the breathing room above the
+        // heading, but collapse the space below so the carousel sits
+        // close to it. Carousel handles its own top padding.
+        padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px) 0',
         maxWidth: 1100, margin: '0 auto', textAlign: 'center',
       }}
     >
