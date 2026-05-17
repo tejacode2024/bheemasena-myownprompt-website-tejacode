@@ -28,12 +28,34 @@ function ScrollToTop() {
   return null
 }
 
+// How often to re-pull the admin config in the background. Short enough
+// that a site_online / closed_message change shows up on open user
+// sessions within ~POLL_MS of the admin clicking Save; light enough
+// (single JSON GET, primitives compared by reference so no re-render
+// when nothing actually changed) that hammering it isn't a concern.
+const CONFIG_POLL_MS = 2500
+
 function App() {
   // Pull the live site_online / closed_message values from the admin
-  // config once on mount. Other components read from the store; if the
-  // request fails we keep the optimistic defaults (siteOnline = true).
+  // config on mount, then poll every CONFIG_POLL_MS so admin changes
+  // propagate to open user sessions without a page reload. Also refetch
+  // immediately whenever the tab becomes visible again so users who
+  // were idle/in another tab see the latest state right away.
   const loadConfig = useConfigStore((s) => s.load)
-  useEffect(() => { loadConfig() }, [loadConfig])
+  useEffect(() => {
+    loadConfig()
+    const interval = setInterval(() => {
+      // Skip background polling while the tab is hidden — pointless
+      // network use, and visibilitychange will refetch when it returns.
+      if (!document.hidden) loadConfig()
+    }, CONFIG_POLL_MS)
+    const onVisible = () => { if (!document.hidden) loadConfig() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [loadConfig])
 
   return (
     <>
