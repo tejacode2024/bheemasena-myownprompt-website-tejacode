@@ -303,10 +303,15 @@ textarea.field-input { height: auto; padding: 12px 14px; resize: vertical; line-
     padding: 16px 0 24px !important;
     gap: 20px !important;
   }
-  #menu[data-variant="preview"] .menu-block-media {
-    /* Let the container size to the image's natural ratio so the whole
-       photo is visible and there are no cream letterbox bands above/below. */
+  #menu[data-variant="preview"] .menu-block-media,
+  #menu[data-variant="preview"] .menu-block-media > div {
+    /* Let both the outer wrapper AND the inner MediaPlaceholder container
+       size to the image's natural ratio so the whole photo is visible and
+       there are no cream letterbox bands above or below. */
     aspect-ratio: auto !important;
+    height: auto !important;
+  }
+  #menu[data-variant="preview"] .menu-block-media {
     border-radius: 12px;
     background: var(--color-cream);
   }
