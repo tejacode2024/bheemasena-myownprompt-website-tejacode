@@ -89,7 +89,7 @@ export function HeroVideo() {
         style={{
           position: 'absolute', inset: 0,
           background:
-            'linear-gradient(180deg, rgba(251,248,243,0.55) 0%, rgba(251,248,243,0.20) 40%, rgba(251,248,243,0.10) 70%, rgba(14,14,12,0.25) 100%)',
+            'linear-gradient(180deg, rgba(251,248,243,0.55) 0%, rgba(251,248,243,0.20) 40%, rgba(251,248,243,0.10) 70%, rgba(251,248,243,0.05) 100%)',
         }}
       />
 
@@ -123,20 +123,14 @@ export function HeroVideo() {
           </span>
         </motion.div>
 
-        <h1 style={{ margin: 0, textShadow: '0 2px 12px rgba(0,0,0,0.5), 0 8px 40px rgba(0,0,0,0.35)' }}>
-          <ClipLine>
-            <span style={lineStyle}>Celebration</span>
-          </ClipLine>
-          <ClipLine delay={0.10}>
-            <span style={lineStyle}>
-              <span className="heading-em">of</span> <span>Flavor</span>
-            </span>
-          </ClipLine>
-          <ClipLine delay={0.20}>
-            <span style={lineStyle}>
-              <span className="heading-em">and</span> <span>Ambiance</span>
-            </span>
-          </ClipLine>
+        <h1 style={{ margin: 0, textShadow: 'none' }}>
+          <span style={lineStyle}>Celebration</span>
+          <span style={lineStyle}>
+            <span className="heading-em">of</span> <span>Flavor</span>
+          </span>
+          <span style={lineStyle}>
+            <span className="heading-em">and</span> <span>Ambiance</span>
+          </span>
         </h1>
 
         <motion.p
@@ -192,13 +186,13 @@ export function HeroVideo() {
 const lineStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 'clamp(28px, 8vw, 100px)',
-  fontWeight: 700,
+  fontWeight: 900,
   lineHeight: 1.05,
   letterSpacing: '-0.01em',
   color: 'var(--color-ink)',
-  // Instrument Serif only ships weight 400; -webkit-text-stroke gives
-  // the glyphs visible extra thickness without swapping the font.
-  WebkitTextStroke: '1.5px currentColor',
+  textShadow: 'none',
+  filter: 'none',
+  WebkitTextStroke: '1px currentColor',
 }
 
 function ClipLine({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
