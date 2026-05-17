@@ -5,6 +5,7 @@ import { MENU } from '../../data/menu'
 import { MenuTabs } from '../menu/MenuTabs'
 import { MenuCategoryBlock, categoryAnchor } from '../menu/MenuCategoryBlock'
 import { openZomato } from '../../lib/zomato'
+import { useConfigStore } from '../../state/configStore'
 
 const CATEGORIES = [
   'Veg Starters',
@@ -34,14 +35,19 @@ type Props = { variant?: 'preview' | 'full' }
 
 export function MenuSection({ variant = 'preview' }: Props) {
   const [active, setActive] = useState<Category>(CATEGORIES[0])
+  // Admin-hidden items are removed entirely from the rendered menu.
+  // (Admin-disabled items still render — MenuRow swaps the + button
+  // for an "Unavailable" chip in that case.)
+  const hiddenItems = useConfigStore((s) => s.hiddenItems)
 
   const itemsByCategory = useMemo(() => {
+    const hidden = new Set(hiddenItems)
     const map: Record<Category, ReturnType<typeof MENU.filter>> = {} as Record<Category, ReturnType<typeof MENU.filter>>
     for (const cat of CATEGORIES) {
-      map[cat] = MENU.filter((m) => (m.category as string) === cat)
+      map[cat] = MENU.filter((m) => (m.category as string) === cat && !hidden.has(m.id))
     }
     return map
-  }, [])
+  }, [hiddenItems])
 
   // Variant='full' tab clicks scroll-snap to that category's block.
   useEffect(() => {

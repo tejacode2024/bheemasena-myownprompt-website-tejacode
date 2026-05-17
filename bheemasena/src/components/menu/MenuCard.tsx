@@ -19,10 +19,12 @@ export function MenuCard({ item }: Props) {
   const toast = useUIStore((s) => s.toast)
   const siteOnline    = useConfigStore((s) => s.siteOnline)
   const closedMessage = useConfigStore((s) => s.closedMessage)
+  const enabled       = useConfigStore((s) => s.isItemEnabled(item.id))
 
   const [pulse, setPulse] = useState(0)
 
   const handleAdd = () => {
+    if (!enabled) return
     if (!siteOnline) {
       toast(closedMessage, 'info')
       return
@@ -90,7 +92,29 @@ export function MenuCard({ item }: Props) {
         )}
       </div>
 
-      {qty === 0 ? (
+      {!enabled ? (
+        <span
+          aria-label={`${item.name} is currently unavailable`}
+          style={{
+            position: 'absolute',
+            top: 12, right: 12,
+            display: 'inline-flex', alignItems: 'center',
+            padding: '4px 10px',
+            borderRadius: 999,
+            background: 'rgba(14,14,12,0.04)',
+            color: 'var(--color-muted)',
+            border: '1px solid rgba(14,14,12,0.08)',
+            fontSize: 9,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontFamily: 'inherit',
+            whiteSpace: 'nowrap',
+            userSelect: 'none',
+          }}
+        >
+          Unavailable
+        </span>
+      ) : qty === 0 ? (
         <motion.button
           key={`add-${pulse}`}
           type="button"
