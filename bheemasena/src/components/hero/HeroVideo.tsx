@@ -38,8 +38,8 @@ export function HeroVideo() {
       style={{
         position: 'relative',
         width: '100%',
-        height: 'min(100svh, 920px)',
-        minHeight: '88svh',
+        height: '100svh',
+        minHeight: '600px',
         overflow: 'hidden',
         background: 'var(--color-paper)',
       }}
@@ -100,8 +100,8 @@ export function HeroVideo() {
         style={{
           position: 'relative', zIndex: 10,
           height: '100%',
-          padding: 'clamp(80px,10vw,140px) clamp(24px,6vw,96px) clamp(48px,6vw,80px)',
-          paddingTop: 'clamp(100px, 14vw, 160px)',
+          padding: 'clamp(90px,11vw,150px) clamp(24px,6vw,96px) clamp(48px,6vw,80px)',
+          paddingBottom: 'clamp(64px, 8vw, 100px)',
           display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
           maxWidth: 1280, margin: '0 auto',
         }}
@@ -112,15 +112,17 @@ export function HeroVideo() {
             background: 'rgba(14,14,12,0.55)', marginRight: 16,
           }} />
           <span style={{
-            fontSize: 10, letterSpacing: '0.35em', textTransform: 'uppercase',
+            fontSize: 10, letterSpacing: '0.38em', textTransform: 'uppercase',
             color: 'var(--color-ink)',
+            fontWeight: 700,
+            textShadow: '0 1px 6px rgba(0,0,0,0.6)',
             WebkitTextStroke: '0.4px currentColor',
           }}>
             ★ Hastinapura / Est. Ancient
           </span>
         </motion.div>
 
-        <h1 style={{ margin: 0, textShadow: '0 2px 16px rgba(251,248,243,0.55)' }}>
+        <h1 style={{ margin: 0, textShadow: '0 2px 12px rgba(0,0,0,0.5), 0 8px 40px rgba(0,0,0,0.35)' }}>
           <ClipLine>
             <span style={lineStyle}>Celebration</span>
           </ClipLine>
@@ -143,7 +145,8 @@ export function HeroVideo() {
             fontSize: 'clamp(13px, 1.3vw, 16px)',
             lineHeight: 1.7,
             color: 'var(--color-ink)',
-            textShadow: '0 2px 16px rgba(251,248,243,0.55)',
+            fontWeight: 600,
+            textShadow: '0 1px 6px rgba(0,0,0,0.55)',
             WebkitTextStroke: '0.4px currentColor',
             maxWidth: 520,
             letterSpacing: '0.02em',
@@ -187,14 +190,14 @@ export function HeroVideo() {
 
 const lineStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: 'clamp(48px, 9vw, 120px)',
-  fontWeight: 400,
-  lineHeight: 0.94,
+  fontSize: 'clamp(36px, 7vw, 100px)',
+  fontWeight: 700,
+  lineHeight: 1.0,
   letterSpacing: '-0.01em',
   color: 'var(--color-ink)',
   // Instrument Serif only ships weight 400; -webkit-text-stroke gives
   // the glyphs visible extra thickness without swapping the font.
-  WebkitTextStroke: '1px currentColor',
+  WebkitTextStroke: '1.5px currentColor',
 }
 
 function ClipLine({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -217,11 +220,15 @@ function InfoBlock({ icon, label, value }: { icon: React.ReactNode; label: strin
       <span style={{ color: 'var(--color-ink)', marginTop: 2 }}>{icon}</span>
       <div>
         <div style={{
-          fontSize: 9, letterSpacing: '0.25em', color: 'var(--color-ink-soft)',
+          fontSize: 9, letterSpacing: '0.28em', color: 'rgba(246,242,236,0.90)',
+          fontWeight: 700,
+          textShadow: '0 1px 4px rgba(0,0,0,0.6)',
           WebkitTextStroke: '0.4px currentColor',
         }}>{label}</div>
         <div style={{
-          fontSize: 12, color: 'var(--color-ink)', marginTop: 2,
+          fontSize: 13, color: '#FFFFFF', marginTop: 2,
+          fontWeight: 600,
+          textShadow: '0 1px 4px rgba(0,0,0,0.6)',
           WebkitTextStroke: '0.4px currentColor',
         }}>{value}</div>
       </div>
