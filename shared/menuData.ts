@@ -111,23 +111,27 @@ export const MENU: MenuItem[] = withVeg([
     description: 'Mughlai biryani perfumed with rose water and cardamom. Sufficient for 2 people.' },
   { id: 'nb-08', category: 'Non-Veg Biryani', name: 'Chicken Lollipop Biryani',   price: 330,
     description: 'Spiced lollipop drumsticks layered into a fragrant dum biryani. Sufficient for 2 people.' },
+     { id: 'nb-09', category: 'Non-Veg Biryani', name: 'Chicken Gongura Biryani',   price: 330,
+    description: 'Spiced lollipop drumsticks layered into a fragrant dum biryani. Sufficient for 2 people.' },
+
 
   // ───── Mini Biryani (sufficient for 1 person) ─────
   { id: 'mb-01', category: 'Mini Biryani', name: 'Mini Dum Biryani',             price: 170,
     description: 'A single-serve dum biryani. Sufficient for 1 person.' },
   { id: 'mb-02', category: 'Mini Biryani', name: 'Mini Fry Biryani',             price: 180,
     description: 'Twice-cooked chicken with rice, half-portion. Sufficient for 1 person.' },
-  { id: 'mb-03', category: 'Mini Biryani', name: 'Mini Special Chicken Biryani', price: 190,
+  { id: 'mb-03', category: 'Mini Biryani', name: 'Mini Special Chicken Biryani', price: 210,
     description: 'House special chicken biryani in a solo portion. Sufficient for 1 person.' },
   { id: 'mb-04', category: 'Mini Biryani', name: 'Mini Paneer Biryani',          price: 190,
     description: 'Paneer biryani in a one-up serve. Sufficient for 1 person.' },
   { id: 'mb-05', category: 'Mini Biryani', name: 'Mini Mushroom Biryani',        price: 200,
     description: 'Mushroom dum biryani in a single portion. Sufficient for 1 person.' },
-  { id: 'mb-06', category: 'Mini Biryani', name: 'Mini Mughlai Biryani',         price: 200,
+  { id: 'mb-06', category: 'Mini Biryani', name: 'Mini Mughlai Biryani',         price: 220,
     description: 'Mughlai biryani perfumed and plated solo. Sufficient for 1 person.' },
-  { id: 'mb-07', category: 'Mini Biryani', name: 'Mini Special Biryani',         price: 200,
-    description: "Chef's pick of the day, mini portion. Sufficient for 1 person." },
-
+      { id: 'mb-07', category: 'Mini Biryani', name: 'Mini Gongura Chicken Biryani',         price: 220,
+    description: 'Mughlai biryani perfumed and plated solo. Sufficient for 1 person.' },
+  
+ 
   // ───── Breads ─────
   { id: 'br-01', category: 'Breads', name: 'Butter Naan', price: 45,
     description: 'Soft tandoor naan brushed with cultured butter.' },
